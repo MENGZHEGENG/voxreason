@@ -1,0 +1,9 @@
+[project]
+name = "voxreason-public"
+version = "0.1.0"
+description = "Public code and paper package for listener-free evidence-grounded speech reasoning."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

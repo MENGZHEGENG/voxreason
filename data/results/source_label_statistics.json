@@ -1,0 +1,82 @@
+{
+  "bootstrap_ci": [
+    {
+      "lower": 1.0,
+      "mean": 1.0,
+      "metric": "evidence_f1",
+      "samples": 10000,
+      "upper": 1.0
+    },
+    {
+      "lower": 1.0,
+      "mean": 1.0,
+      "metric": "plan_slot_accuracy",
+      "samples": 10000,
+      "upper": 1.0
+    },
+    {
+      "lower": 1.0,
+      "mean": 1.0,
+      "metric": "grounded_score",
+      "samples": 10000,
+      "upper": 1.0
+    },
+    {
+      "lower": 0.0,
+      "mean": 0.0,
+      "metric": "hallucinated_evidence_rate",
+      "samples": 10000,
+      "upper": 0.0
+    }
+  ],
+  "cases": 100,
+  "paired_cases": 100,
+  "pairwise": [
+    {
+      "baseline_mean": 0.8571428571428571,
+      "candidate_mean": 1.0,
+      "delta_mean": 0.1428571428571429,
+      "metric": "evidence_f1",
+      "paired_cases": 100
+    },
+    {
+      "baseline_mean": 0.185,
+      "candidate_mean": 1.0,
+      "delta_mean": 0.815,
+      "metric": "plan_slot_accuracy",
+      "paired_cases": 100
+    },
+    {
+      "baseline_mean": 0.5689642857142857,
+      "candidate_mean": 1.0,
+      "delta_mean": 0.43103571428571436,
+      "metric": "grounded_score",
+      "paired_cases": 100
+    },
+    {
+      "baseline_mean": 0.0,
+      "candidate_mean": 0.0,
+      "delta_mean": 0.0,
+      "metric": "hallucinated_evidence_rate",
+      "paired_cases": 100
+    }
+  ],
+  "systems": [
+    {
+      "cases": 100,
+      "evidence_f1": 0.8571428571428571,
+      "grounded_score": 0.5689642857142857,
+      "hallucinated_evidence_rate": 0.0,
+      "plan_slot_accuracy": 0.185,
+      "system_id": "text_neutral_control"
+    },
+    {
+      "cases": 100,
+      "evidence_f1": 1.0,
+      "grounded_score": 1.0,
+      "hallucinated_evidence_rate": 0.0,
+      "plan_slot_accuracy": 1.0,
+      "system_id": "source_label_evidence_planner"
+    }
+  ]
+}

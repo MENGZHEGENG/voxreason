@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw=black!55, rounded corners=2pt, line width=0.45pt, align=center, minimum width=2.45cm, minimum height=0.92cm, fill=white},
+  cue/.style={box, fill=blue!6},
+  model/.style={box, fill=teal!7},
+  eval/.style={box, fill=orange!10},
+  arrow/.style={-{Latex[length=2.2mm]}, line width=0.55pt, draw=black!65},
+  dashedarrow/.style={-{Latex[length=2.2mm]}, line width=0.55pt, draw=black!55, dashed}
+]
+\node[cue] (input) {Dialogue\\speech cues\\role context};
+\node[model, right=0.7cm of input] (evidence) {Evidence\\selection};
+\node[model, right=0.7cm of evidence] (planner) {Structured\\speaking plan};
+\node[eval, right=0.7cm of planner] (metrics) {Faithfulness\\metrics};
+\node[eval, below=0.72cm of planner] (counter) {Counterfactual\\cue edits};
+\node[model, above=0.72cm of planner] (reward) {Process\\supervision};
+
+\draw[arrow] (input) -- node[above, font=\scriptsize] {licensed labels} (evidence);
+\draw[arrow] (evidence) -- node[above, font=\scriptsize] {cited cues} (planner);
+\draw[arrow] (planner) -- node[above, font=\scriptsize] {JSON slots} (metrics);
+\draw[dashedarrow] (counter) -- node[right, font=\scriptsize] {expected slot changes} (metrics);
+\draw[dashedarrow] (input.south) to[out=-50,in=180] (counter.west);
+\draw[arrow] (metrics.north) to[out=110,in=0] (reward.east);
+\draw[arrow] (reward.west) to[out=180,in=90] (evidence.north);
+\node[draw=black!25, fill=gray!4, rounded corners=3pt, inner sep=6pt, fit=(input)(evidence)(planner)(metrics)(counter)(reward)] {};
+\end{tikzpicture}

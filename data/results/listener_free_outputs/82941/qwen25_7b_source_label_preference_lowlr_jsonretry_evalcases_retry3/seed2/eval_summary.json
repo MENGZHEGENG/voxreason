@@ -1,0 +1,10 @@
+{
+  "evidence_f1": 1.0,
+  "evidence_precision": 1.0,
+  "evidence_recall": 1.0,
+  "grounded_score": 0.8444852941176471,
+  "hallucinated_evidence_rate": 0.0,
+  "missing_predictions": 83,
+  "num_predictions": 17,
+  "plan_slot_accuracy": 0.6544117647058824
+}

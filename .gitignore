@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+paper/build/
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.pdf
+.DS_Store
