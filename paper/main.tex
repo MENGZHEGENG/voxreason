@@ -98,12 +98,15 @@ Table~\ref{tab:acoustic-preflight} confirms that the acoustic channel is non-emp
 The current results are intentionally bounded. The source-label diagnostic is not a claim of broad benchmark superiority, and the model checks still suffer from incomplete valid prediction coverage. The paper also does not evaluate listener judgments, generated-speech user ratings, or real-world release behavior. Those questions require a separate study design with recruited raters and stronger generation provenance. The contribution here is the process layer: before asking downstream user questions, we ask whether the model can ground its reasoning in the evidence it claims to use.
 
 \section{Reproducibility}
-The public repository includes the venue-neutral manuscript, compact public result files, table-generation code, and tests. Recreate the tables with:
+The public repository includes the venue-neutral manuscript, the 100-case VoxReasonBench source-label split, planner prompt files, gold planner outputs, compact result files, table-generation code, scoring code, and tests. Validate the benchmark data, rebuild prompts, score gold test predictions, and recreate the tables with:
 \begin{verbatim}
+python3 scripts/validate_benchmark_data.py
+python3 scripts/build_benchmark_prompts.py
+python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 python3 scripts/reproduce_results.py
 python3 -m pytest
 \end{verbatim}
-No site-specific job launch scripts, machine-local paths, model weights, raw audio, or raw model completions are included.
+No site-specific job launch scripts, machine-local paths, model weights, raw audio, or raw model completions are included. The released benchmark files contain derived labels, cue records, text prompts, metadata, and expected speaking plans; users who need waveform inputs should obtain them from the cited RAVDESS source under its license.
 
 \begin{thebibliography}{11}
 
