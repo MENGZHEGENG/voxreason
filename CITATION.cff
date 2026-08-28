@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If VoxReasonBench helps your work, please cite the paper draft and this repository."
+title: "VoxReasonBench: Evidence-Grounded Process Supervision for Speech Reasoning"
+version: "0.1.0"
+date-released: "2026-08-28"
+repository-code: "https://github.com/MENGZHEGENG/voxreason"
+authors:
+  - name: "Anonymous Authors"
+preferred-citation:
+  type: article
+  title: "VoxReasonBench: Evidence-Grounded Process Supervision for Speech Reasoning"
+  authors:
+    - name: "Anonymous Authors"
+  year: 2026

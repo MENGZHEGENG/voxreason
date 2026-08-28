@@ -9,6 +9,7 @@ SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "build"}
 TEXT_SUFFIXES = {
     ".bib",
     ".bst",
+    ".cff",
     ".json",
     ".jsonl",
     ".md",
@@ -111,3 +112,9 @@ def test_generated_paper_outputs_are_not_tracked() -> None:
         or path == removed_visual_script
     ]
     assert offenders == []
+
+
+def test_public_release_has_citation_and_data_use_notes() -> None:
+    assert (ROOT / "CITATION.cff").is_file()
+    assert (ROOT / "DATA_USE.md").is_file()
+    assert (ROOT / "data/benchmark/source_label/summary.json").is_file()
