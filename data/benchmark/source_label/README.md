@@ -5,6 +5,7 @@ This directory contains the public VoxReasonBench source-label split used by the
 ## Files
 
 - `summary.json`: split counts, source license, and claim scope.
+- `checksums.sha256`: SHA-256 checksums for the public benchmark files.
 - `splits/train_cases_public.jsonl`: 67 training cases.
 - `splits/dev_cases_public.jsonl`: 17 development cases.
 - `splits/test_cases_public.jsonl`: 16 test cases.
@@ -21,6 +22,7 @@ The files contain derived labels, text prompts, cue spans, metadata, and expecte
 
 ```bash
 python3 scripts/validate_benchmark_data.py
+python3 scripts/check_benchmark_files.py
 python3 scripts/build_benchmark_prompts.py
 python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 ```

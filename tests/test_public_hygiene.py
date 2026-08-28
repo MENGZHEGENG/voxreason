@@ -14,6 +14,7 @@ TEXT_SUFFIXES = {
     ".jsonl",
     ".md",
     ".py",
+    ".sha256",
     ".sty",
     ".tex",
     ".toml",

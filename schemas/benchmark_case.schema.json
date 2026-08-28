@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MENGZHEGENG/voxreason/schemas/benchmark_case.schema.json",
+  "title": "VoxReasonBench source-label case",
+  "type": "object",
+  "required": [
+    "case_id",
+    "context_text",
+    "target_text",
+    "role_profile",
+    "gold_cues",
+    "gold_plan",
+    "counterfactuals",
+    "metadata"
+  ],
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "context_text": {"type": "string", "minLength": 1},
+    "target_text": {"type": "string", "minLength": 1},
+    "role_profile": {"type": "string", "minLength": 1},
+    "context_audio": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "Raw audio paths are intentionally omitted from public case files."
+    },
+    "gold_cues": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/cue"}
+    },
+    "gold_plan": {"$ref": "#/$defs/plan"},
+    "counterfactuals": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/counterfactual"}
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["source_dataset", "source_record_id", "license_name", "redistribution_status"],
+      "properties": {
+        "source_dataset": {"type": "string"},
+        "source_record_id": {"type": "string"},
+        "license_name": {"type": "string"},
+        "redistribution_status": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "cue": {
+      "type": "object",
+      "required": ["cue_id", "cue_type", "source", "label"],
+      "properties": {
+        "cue_id": {"type": "string", "minLength": 1},
+        "cue_type": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "enum": ["context_text", "context_audio", "target_text", "role_profile"]},
+        "label": {"type": "string"},
+        "text": {"type": "string"},
+        "start_sec": {"type": ["number", "null"]},
+        "end_sec": {"type": ["number", "null"]},
+        "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+      },
+      "additionalProperties": true
+    },
+    "plan": {
+      "type": "object",
+      "required": ["emotion", "intent", "pitch", "energy", "rate", "pause", "emphasis", "stance"],
+      "properties": {
+        "emotion": {"type": "string"},
+        "intent": {"type": "string"},
+        "pitch": {"type": "string"},
+        "energy": {"type": "string"},
+        "rate": {"type": "string"},
+        "pause": {"type": "string"},
+        "emphasis": {"type": "array", "items": {"type": "string"}},
+        "stance": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "counterfactual": {
+      "type": "object",
+      "required": ["edit_id", "changed_cue_id", "description", "expected_plan_delta"],
+      "properties": {
+        "edit_id": {"type": "string", "minLength": 1},
+        "changed_cue_id": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "expected_plan_delta": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

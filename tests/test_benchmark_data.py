@@ -42,6 +42,7 @@ def test_gold_predictions_score_perfectly() -> None:
 
 def test_benchmark_scripts_run() -> None:
     subprocess.run([sys.executable, "scripts/validate_benchmark_data.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/check_benchmark_files.py"], cwd=ROOT, check=True)
     subprocess.run([sys.executable, "scripts/build_benchmark_prompts.py"], cwd=ROOT, check=True)
     subprocess.run(
         [

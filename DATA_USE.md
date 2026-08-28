@@ -14,6 +14,8 @@ The source records come from RAVDESS: Livingstone and Russo, The Ryerson Audio-V
 
 Users who need waveform inputs should obtain them from the original RAVDESS source and follow its license terms.
 
+Run `python3 scripts/check_benchmark_files.py` to verify the released benchmark checksums and public case validity.
+
 ## Claim Scope
 
 The released benchmark supports automatic process checks for evidence citation, plan-slot agreement, unsupported evidence, grounded score, and counterfactual cue consistency. It does not report listener judgments or waveform user ratings.

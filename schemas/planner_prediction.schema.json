@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MENGZHEGENG/voxreason/schemas/planner_prediction.schema.json",
+  "title": "VoxReasonBench planner prediction",
+  "type": "object",
+  "required": ["case_id", "cited_cues", "plan"],
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "cited_cues": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/cue"}
+    },
+    "plan": {"$ref": "#/$defs/plan"},
+    "rationale": {"type": "string"}
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "cue": {
+      "type": "object",
+      "required": ["cue_id", "cue_type", "source", "label"],
+      "properties": {
+        "cue_id": {"type": "string", "minLength": 1},
+        "cue_type": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "enum": ["context_text", "context_audio", "target_text", "role_profile"]},
+        "label": {"type": "string"},
+        "text": {"type": "string"},
+        "start_sec": {"type": ["number", "null"]},
+        "end_sec": {"type": ["number", "null"]},
+        "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+      },
+      "additionalProperties": true
+    },
+    "plan": {
+      "type": "object",
+      "required": ["emotion", "intent", "pitch", "energy", "rate", "pause", "emphasis", "stance"],
+      "properties": {
+        "emotion": {"type": "string"},
+        "intent": {"type": "string"},
+        "pitch": {"type": "string"},
+        "energy": {"type": "string"},
+        "rate": {"type": "string"},
+        "pause": {"type": "string"},
+        "emphasis": {"type": "array", "items": {"type": "string"}},
+        "stance": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
