@@ -130,3 +130,11 @@ def test_public_paper_avoids_ambiguous_modal_claims() -> None:
         line = text.count("\n", 0, match.start()) + 1
         offenders.append(f"paper/main.tex:{line}:{match.group(0)}")
     assert offenders == []
+
+
+def test_readme_explains_paper_table_regeneration_order() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+    reproduce_index = text.index("python3 scripts/reproduce_results.py")
+    build_index = text.index("latexmk -pdf main.tex")
+    assert reproduce_index < build_index
+    assert "LaTeX tables are rebuilt locally and ignored by Git" in text

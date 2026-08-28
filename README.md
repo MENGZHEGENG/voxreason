@@ -44,6 +44,12 @@ The generated files are intentionally ignored by Git:
 
 ## Build The Paper
 
+Run the reproduction script before compiling, because the LaTeX tables are rebuilt locally and ignored by Git:
+
+```bash
+python3 scripts/reproduce_results.py
+```
+
 Use a standard LaTeX installation from the repository root:
 
 ```bash
