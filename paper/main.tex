@@ -58,7 +58,7 @@ Two design choices are important for reproducibility. First, source labels are k
 
 \section{Experiments}
 \paragraph{Data.}
-The public release includes 100 leakage-checked source-label cases for the main diagnostic and 300 acoustic-feature rows for a dependency-free preflight. The source-label labels provide the supervision needed to evaluate evidence and plan slots without recruiting listeners.
+The public release includes 100 leakage-checked source-label cases derived from RAVDESS records~\citep{ravdess2018} for the main diagnostic and 300 acoustic-feature rows for a dependency-free preflight. The source-label labels provide the supervision needed to evaluate evidence and plan slots without recruiting listeners.
 
 \paragraph{Baselines and variants.}
 We compare a text-only control against the evidence-grounded planner on source-label cases. We also include three-seed model checks for Qwen2.5-3B SFT, Qwen2.5-7B SFT, and Qwen2.5-7B preference tuning. These checks are diagnostic: they test whether the structured schema and evidence metrics remain stable across model variants.
