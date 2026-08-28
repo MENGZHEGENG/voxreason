@@ -5,6 +5,7 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 ## What This Release Contains
 
 - `paper/main.tex`: paper source describing the method and benchmark.
+- `BENCHMARK.md`: benchmark card with scope, split, metric, and source-data details.
 - `CITATION.cff` and `DATA_USE.md`: citation and data-use notes for the code and benchmark.
 - `data/benchmark/source_label/`: VoxReasonBench public case splits, prompt files, and gold planner outputs.
 - `scripts/reproduce_results.py`: rebuilds derived result files from compact result inputs.
