@@ -64,7 +64,7 @@ def write_source_label_table(summary: dict[str, object], path: Path) -> None:
     lines = [
         r"\begin{tabular}{lrrr}",
         r"\toprule",
-        tex_row(["Metric", "Text control", "Evidence planner", r"$\Delta$"]),
+        tex_row(["Metric", "Text control", "Source-label upper bound", r"$\Delta$"]),
         r"\midrule",
     ]
     for metric, label in labels.items():
@@ -119,7 +119,7 @@ def main() -> None:
             "num_cases": source_label["cases"],
             "paired_cases": source_label["paired_cases"],
             "text_only_control": source_by_id["text_neutral_control"],
-            "evidence_grounded": source_by_id["source_label_evidence_planner"],
+            "source_label_upper_bound": source_by_id["source_label_evidence_planner"],
             "construct_validity": construct_validity,
             "pairwise": source_label["pairwise"],
         },

@@ -25,7 +25,7 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     summary = json.loads((ROOT / "data/results/public_summary.json").read_text(encoding="utf-8"))
     source = summary["source_label"]
     assert source["num_cases"] == 100
-    assert source["evidence_grounded"]["plan_slot_accuracy"] == 1.0
+    assert source["source_label_upper_bound"]["plan_slot_accuracy"] == 1.0
     assert source["text_only_control"]["plan_slot_accuracy"] == 0.185
     construct = source["construct_validity"]
     assert construct["broad_benchmark_ready"] is False
@@ -48,7 +48,7 @@ def test_readme_score_highlights_match_reproduced_summary() -> None:
     source_label = summary["source_label"]
     expected = {
         "Text-only control": source_label["text_only_control"],
-        "Evidence-grounded planner": source_label["evidence_grounded"],
+        "Source-label upper bound": source_label["source_label_upper_bound"],
     }
     for row in summary["model_results"]:
         expected[str(row["model"])] = row

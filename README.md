@@ -79,7 +79,7 @@ python3 -m pytest
 Expected score highlights:
 
 - Text-only control: evidence F1 `0.857`, plan accuracy `0.185`, grounded score `0.569`, hallucinated-evidence rate `0.000`.
-- Evidence-grounded planner: evidence F1 `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
+- Source-label upper bound: evidence F1 `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, grounded score `0.915`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, grounded score `0.876`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, grounded score `0.860`, hallucinated-evidence rate `0.000`.
