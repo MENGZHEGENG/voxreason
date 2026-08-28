@@ -120,3 +120,13 @@ def test_public_release_has_citation_and_data_use_notes() -> None:
     assert (ROOT / "CITATION.cff").is_file()
     assert (ROOT / "DATA_USE.md").is_file()
     assert (ROOT / "data/benchmark/source_label/summary.json").is_file()
+
+
+def test_public_paper_avoids_ambiguous_modal_claims() -> None:
+    text = (ROOT / "paper/main.tex").read_text(encoding="utf-8")
+    pattern = re.compile(r"\b(?:" + "ca" + "n|" + "sho" + "uld" + r")\b", re.IGNORECASE)
+    offenders = []
+    for match in pattern.finditer(text):
+        line = text.count("\n", 0, match.start()) + 1
+        offenders.append(f"paper/main.tex:{line}:{match.group(0)}")
+    assert offenders == []
