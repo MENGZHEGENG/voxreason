@@ -9,19 +9,19 @@
 \usepackage{natbib}
 \usepackage{hyperref}
 
-\title{VoxReason: Evidence-Grounded Process Supervision for Speech Reasoning}
+\title{VoxReasonBench: Evidence-Grounded Process Supervision for Speech Reasoning}
 
 \author{Mengzhe Geng\\
 \texttt{MENGZHEGENG}}
 
-\newcommand{\method}{VoxReason}
+\newcommand{\method}{VoxReasonBench}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the acoustic and dialogue evidence that should govern a speaking plan. We introduce \method, a listener-free framework for evidence-grounded speech reasoning. A model must cite dialogue and acoustic cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes a source-label diagnostic suite, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, and counterfactual consistency. On 100 source-label cases, the evidence-grounded planner improves over a text-only control by 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further expose where larger or preference-tuned planners preserve evidence citation while losing plan coverage. \method does not claim listener judgments; instead, it isolates the process-supervision layer that should be correct before human listening studies are meaningful.
+Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the acoustic and dialogue evidence that should govern a speaking plan. We introduce \method, a listener-free diagnostic benchmark for evidence-grounded speech reasoning. A model must cite dialogue and speech cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, and counterfactual consistency. On 100 source-label cases, the evidence-grounded planner improves over a text-only control by 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further expose where larger or preference-tuned planners preserve evidence citation while losing plan coverage. \method does not claim listener judgments; instead, it isolates the process-supervision layer that should be correct before human listening studies are meaningful.
 \end{abstract}
 
 \section{Introduction}

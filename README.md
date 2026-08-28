@@ -1,6 +1,6 @@
 # VoxReason
 
-VoxReason is a public code and paper package for evidence-grounded speech reasoning. The project focuses on listener-free process supervision: the model cites dialogue and speech cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
+VoxReason is a public code and paper package for evidence-grounded speech reasoning. The included paper defines VoxReasonBench, a listener-free diagnostic benchmark for process supervision: the model cites dialogue and speech cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
 
 ## What This Release Contains
 
@@ -11,6 +11,10 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 - `tests/`: reproducibility and public-hygiene checks.
 
 This repository intentionally excludes generated tables, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
+
+## Benchmark Scope
+
+VoxReasonBench evaluates whether a speech-reasoning planner grounds each delivery decision in permitted source evidence. It is not a waveform-quality benchmark and does not report listener judgments.
 
 ## Quick Start
 
@@ -40,7 +44,7 @@ If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on
 
 ## Claim Boundary
 
-The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, plan-slot accuracy, grounded score, hallucinated-evidence rate, counterfactual cue consistency, and lightweight acoustic preflight checks. It does not report listener judgments or generated-audio user ratings.
+The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, plan-slot accuracy, grounded score, hallucinated-evidence rate, counterfactual cue consistency, and lightweight acoustic preflight checks. It does not report listener judgments or waveform user ratings.
 
 ## Main Reproduction Commands
 

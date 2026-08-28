@@ -34,6 +34,8 @@ FORBIDDEN_WORDS = [
     "human" + "-preference",
     "listener" + "-perceived",
     "deployment" + "-readiness",
+    "generated" + "-audio",
+    "generated" + "-speech quality",
     "ic" + "lr",
     "open" + "review",
 ]
