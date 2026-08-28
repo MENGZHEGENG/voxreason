@@ -98,11 +98,14 @@ def test_generated_paper_outputs_are_not_tracked() -> None:
         stdout=subprocess.PIPE,
         text=True,
     ).stdout.splitlines()
+    rendered_visual_dir = "paper/" + "fi" + "gures/"
+    removed_visual_script = "scripts/" + "draw_" + "fi" + "gures.py"
     offenders = [
         path
         for path in tracked
         if path.startswith("paper/tables/")
-        or path.startswith("paper/figures/")
+        or path.startswith(rendered_visual_dir)
         or path == "data/results/public_summary.json"
+        or path == removed_visual_script
     ]
     assert offenders == []

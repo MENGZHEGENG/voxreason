@@ -5,13 +5,12 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 ## What This Release Contains
 
 - `paper/main.tex`: venue-neutral manuscript source.
-- `scripts/draw_figures.py`: generates the paper TikZ figure sources.
 - `scripts/reproduce_results.py`: regenerates the paper tables and public summary from compact result inputs.
 - `src/voxreason_public/`: small readers and aggregators for the public result files.
 - `data/results/`: compact public result inputs used to rebuild the paper tables.
 - `tests/`: reproducibility and public-hygiene checks.
 
-This repository intentionally excludes generated tables, generated figures, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
+This repository intentionally excludes generated tables, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
 
 ## Quick Start
 
@@ -20,14 +19,12 @@ python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -e . pytest
 python3 scripts/reproduce_results.py
-python3 scripts/draw_figures.py
 python3 -m pytest
 ```
 
 The generated files are intentionally ignored by Git:
 
 - `paper/tables/*.tex`
-- `paper/figures/*.tex`
 - `data/results/public_summary.json`
 
 ## Build The Paper
@@ -49,7 +46,6 @@ The current evidence supports automatic, listener-free process claims: evidence 
 
 ```bash
 python3 scripts/reproduce_results.py
-python3 scripts/draw_figures.py
 python3 -m pytest
 ```
 

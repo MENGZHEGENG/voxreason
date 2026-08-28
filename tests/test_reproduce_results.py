@@ -29,14 +29,3 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     models = {row["model"]: row for row in summary["model_results"]}
     assert set(models) == {"Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"}
     assert models["Qwen2.5-3B SFT"]["plan_slot_accuracy_mean"] > models["Qwen2.5-7B preference"]["plan_slot_accuracy_mean"]
-
-
-def test_draw_figures_generates_tikz_sources() -> None:
-    subprocess.run([sys.executable, "scripts/draw_figures.py"], cwd=ROOT, check=True)
-
-    pipeline = (ROOT / "paper/figures/fig_pipeline.tex").read_text(encoding="utf-8")
-    scope = (ROOT / "paper/figures/fig_claim_scope.tex").read_text(encoding="utf-8")
-    assert "Evidence" in pipeline
-    assert "Structured" in pipeline
-    assert "Claims supported here" in scope
-    assert "Deferred validation" in scope

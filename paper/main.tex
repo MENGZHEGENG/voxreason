@@ -5,11 +5,8 @@
 \input{math_commands.tex}
 
 \usepackage{booktabs}
-\usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{hyperref}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit}
 
 \title{VoxReason: Evidence-Grounded Process Supervision for Speech Reasoning}
 
@@ -31,22 +28,15 @@ Speech is not only a transcript. Pitch, timing, energy, speaker role, and conver
 
 This paper studies \emph{evidence-grounded speech reasoning}. Given dialogue context, optional acoustic observations, a speaker role, and a target utterance, the system predicts a structured speaking plan and cites the cues that support it. The core question is not whether the final waveform sounds good, but whether the reasoning process identifies the right evidence and changes predictably when that evidence changes.
 
-\method operationalizes this question with a narrow claim boundary. The current paper uses existing source labels and automatic checks; it does not depend on newly recruited listeners. This makes the evaluation practical for rapid method development while avoiding claims that require perceptual human studies. Figure~\ref{fig:pipeline} shows the pipeline.
+\method operationalizes this question with a narrow claim boundary. The current paper uses existing source labels and automatic checks; it does not depend on newly recruited listeners. This makes the evaluation practical for rapid method development while avoiding claims that require perceptual human studies.
 
 Our contributions are:
 \begin{itemize}
     \item a formal process-supervision target for speech reasoning, separating evidence selection, speaking-plan prediction, and counterfactual cue consistency;
     \item a listener-free evaluation protocol with source-label provenance, leakage controls, and automatic metrics tied to concrete claim boundaries;
-    \item a reproducible public code release that rebuilds the main tables and figures without site-specific job launch files; and
+    \item a reproducible public code release that rebuilds the main tables without site-specific job launch files; and
     \item empirical diagnostics showing that evidence-grounded planning can close large gaps against a text-only control while model-scale and preference variants reveal remaining plan-coverage weaknesses.
 \end{itemize}
-
-\begin{figure}[t]
-\centering
-\input{figures/fig_pipeline}
-\caption{\method evaluates speech reasoning as a process: cite evidence, predict a structured speaking plan, and test whether counterfactual cue edits induce the expected plan changes.}
-\label{fig:pipeline}
-\end{figure}
 
 \section{Related Work}
 \paragraph{Reasoning for speech and audio.}
@@ -64,13 +54,6 @@ We evaluate four listener-free quantities. Evidence F1 compares $\hat{E}_i$ with
 \method uses a structured planner that emits machine-checkable JSON. The planner is trained or prompted to cite cue identifiers before predicting plan slots. The same schema supports supervised fine-tuning and process rewards: evidence recall rewards missing-cue recovery, evidence precision penalizes unsupported citations, and slot accuracy rewards correct speaking-plan choices. Counterfactual cue edits provide a stress test: the method should revise affected slots while preserving irrelevant ones.
 
 Two design choices are important for reproducibility. First, source labels are kept separate from generated explanations so that a model cannot receive credit for inventing evidence. Second, evaluation is defined before any listener study. This prevents automatic improvements from being presented as user-facing perceptual gains.
-
-\begin{figure}[t]
-\centering
-\input{figures/fig_claim_scope}
-\caption{Claim boundary used in this paper. Listener-free evidence supports process-supervision claims; listener studies are deferred and are not used for current conclusions.}
-\label{fig:claim-scope}
-\end{figure}
 
 \section{Experiments}
 \paragraph{Data.}
@@ -114,10 +97,9 @@ Table~\ref{tab:acoustic-preflight} confirms that the acoustic channel is non-emp
 The current results are intentionally bounded. The source-label diagnostic is not a claim of broad benchmark superiority, and the model checks still suffer from incomplete valid prediction coverage. The paper also does not evaluate listener judgments, generated-speech user ratings, or real-world release behavior. Those questions require a separate study design with recruited raters and stronger generation provenance. The contribution here is the process layer: before asking downstream user questions, we ask whether the model can ground its reasoning in the evidence it claims to use.
 
 \section{Reproducibility}
-The public repository includes the venue-neutral manuscript, compact public result files, table-generation code, figure-generation code, and tests. Recreate the tables and figures with:
+The public repository includes the venue-neutral manuscript, compact public result files, table-generation code, and tests. Recreate the tables with:
 \begin{verbatim}
 python3 scripts/reproduce_results.py
-python3 scripts/draw_figures.py
 python3 -m pytest
 \end{verbatim}
 No site-specific job launch scripts, machine-local paths, model weights, raw audio, or raw model completions are included.
