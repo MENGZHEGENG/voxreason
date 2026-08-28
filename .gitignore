@@ -11,4 +11,5 @@ paper/*.log
 paper/*.out
 paper/*.pdf
 data/results/public_summary.json
+outputs/
 .DS_Store
