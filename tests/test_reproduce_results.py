@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -29,3 +30,32 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     models = {row["model"]: row for row in summary["model_results"]}
     assert set(models) == {"Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"}
     assert models["Qwen2.5-3B SFT"]["plan_slot_accuracy_mean"] > models["Qwen2.5-7B preference"]["plan_slot_accuracy_mean"]
+
+
+def test_readme_score_highlights_match_reproduced_summary() -> None:
+    subprocess.run([sys.executable, "scripts/reproduce_results.py"], cwd=ROOT, check=True)
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    summary = json.loads((ROOT / "data/results/public_summary.json").read_text(encoding="utf-8"))
+    source_label = summary["source_label"]
+    expected = {
+        "Text-only control": source_label["text_only_control"],
+        "Evidence-grounded planner": source_label["evidence_grounded"],
+    }
+    for row in summary["model_results"]:
+        expected[str(row["model"])] = row
+
+    pattern = re.compile(
+        r"^- (?P<label>[^:]+): evidence F1 `(?P<evidence>\d+\.\d{3})`, "
+        r"plan accuracy `(?P<plan>\d+\.\d{3})`, grounded score `(?P<grounded>\d+\.\d{3})`, "
+        r"hallucinated-evidence rate `(?P<hallucinated>\d+\.\d{3})`\.",
+        re.MULTILINE,
+    )
+    found = {match.group("label"): match.groupdict() for match in pattern.finditer(readme)}
+
+    assert set(found) == set(expected)
+    for label, row in expected.items():
+        assert found[label]["evidence"] == f"{float(row['evidence_f1'] if 'evidence_f1' in row else row['evidence_f1_mean']):.3f}"
+        assert found[label]["plan"] == f"{float(row['plan_slot_accuracy'] if 'plan_slot_accuracy' in row else row['plan_slot_accuracy_mean']):.3f}"
+        assert found[label]["grounded"] == f"{float(row['grounded_score'] if 'grounded_score' in row else row['grounded_score_mean']):.3f}"
+        assert found[label]["hallucinated"] == f"{float(row['hallucinated_evidence_rate'] if 'hallucinated_evidence_rate' in row else row['hallucinated_evidence_rate_mean']):.3f}"
