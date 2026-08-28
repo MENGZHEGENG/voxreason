@@ -1,6 +1,6 @@
 # VoxReason
 
-VoxReason is a public code and paper package for evidence-grounded speech reasoning. The included paper defines VoxReasonBench, a listener-free diagnostic benchmark for process supervision: the model cites dialogue and speech cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
+VoxReason is a public code and paper package for evidence-grounded speech reasoning. The included paper defines VoxReasonBench, a listener-free diagnostic benchmark for process supervision: the model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
 
 ## What This Release Contains
 

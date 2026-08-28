@@ -21,11 +21,11 @@
 \maketitle
 
 \begin{abstract}
-Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the acoustic and dialogue evidence that governs a speaking plan. We introduce \method, a listener-free diagnostic benchmark for evidence-grounded speech reasoning. A model must cite dialogue and speech cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, and counterfactual consistency. On 100 source-label cases, the evidence-grounded planner improves over a text-only control by 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further expose where larger or preference-tuned planners preserve evidence citation while losing plan coverage. \method does not claim listener judgments; instead, it isolates the process-supervision layer that requires verification before human listening studies are meaningful.
+Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the source evidence that governs a speaking plan. We introduce \method, a listener-free diagnostic benchmark for evidence-grounded speech reasoning. A model must cite permitted source cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, and counterfactual consistency. On 100 source-label cases, upper-bound reconstruction exposes a text-only gap of 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further show where larger or preference-tuned planners preserve evidence citation while losing plan coverage. \method does not claim listener judgments; instead, it isolates the process-supervision layer that requires verification before human listening studies are meaningful.
 \end{abstract}
 
 \section{Introduction}
-Speech is not only a transcript. Pitch, timing, energy, speaker role, and conversational state all shape how an utterance is interpreted or spoken. Recent work has begun to place reasoning modules around speech generation and audio understanding, including actor-style speech role-playing, chain-of-thought text-to-speech, deep audio reasoning, audio generation with reasoning traces, and multimodal speech representations~\citep{actormind2026,cottts2026,mmar2025,thinksound2025,prismaudio2026,audiox2026,speechrepresentation2026}. The resulting systems are compelling, but they create a new evaluation problem: a fluent explanation may be disconnected from the evidence that justifies the speaking plan.
+Speech is not only a transcript. Pitch, timing, energy, speaker role, and conversational state all shape how an utterance is interpreted or spoken. Recent work has begun to place reasoning modules around speech generation and audio understanding, including actor-style speech role-playing, chain-of-thought text-to-speech, deep audio reasoning, audio generation with reasoning traces, and multimodal speech representations~\citep{actormind2026,cottts2026,mmar2025,thinksound2025,prismaudio2026,audiox2026,speechrepresentation2026}. The resulting systems create a new evaluation problem: a fluent explanation may be disconnected from the evidence that justifies the speaking plan.
 
 This paper studies \emph{evidence-grounded speech reasoning}. Given dialogue context, optional acoustic observations, a speaker role, and a target utterance, the system predicts a structured speaking plan and cites the cues that support it. The core question is not whether the final waveform sounds good, but whether the reasoning process identifies the right evidence and changes predictably when that evidence changes.
 
@@ -36,7 +36,7 @@ Our contributions are:
     \item a formal process-supervision target for speech reasoning, separating evidence selection, speaking-plan prediction, and counterfactual cue consistency;
     \item a listener-free evaluation protocol with source-label provenance, leakage controls, and automatic metrics tied to concrete claim boundaries;
     \item a reproducible public code release that rebuilds the main numeric results without site-specific job launch files; and
-    \item empirical diagnostics showing that evidence-grounded planning closes large gaps against a text-only control while model-scale and preference variants reveal remaining plan-coverage weaknesses.
+    \item empirical diagnostics showing that source-label reconstruction exposes a text-only gap while model-scale and preference variants reveal remaining plan-coverage weaknesses.
 \end{itemize}
 
 \section{Related Work}
@@ -69,7 +69,7 @@ All reported metrics are automatic and listener-free. Higher is better for evide
 \begin{table}[t]
 \centering
 \input{tables/source_label_upper_bound}
-\caption{Source-label diagnostic on 100 paired cases. The evidence-grounded planner closes large gaps against a text-only control on process metrics.}
+\caption{Source-label diagnostic on 100 paired cases. Upper-bound reconstruction exposes the text-only gap on process metrics.}
 \label{tab:source-label}
 \end{table}
 
@@ -88,13 +88,13 @@ All reported metrics are automatic and listener-free. Higher is better for evide
 \end{table}
 
 \section{Results and Analysis}
-Table~\ref{tab:source-label} shows that the evidence-grounded planner reaches perfect source-label agreement on the diagnostic cases, while the text-only control misses many plan slots. The largest gap is plan accuracy: the evidence-grounded planner improves from 0.185 to 1.000. Grounded score improves by 0.431, indicating that the gain is not only a citation-format effect but also changes the structured plan.
+Table~\ref{tab:source-label} shows that upper-bound reconstruction reaches perfect source-label agreement on the diagnostic cases, while the text-only control misses many plan slots. The largest gap is plan accuracy: reconstruction improves from 0.185 to 1.000. Grounded score improves by 0.431, indicating that the diagnostic gap is not only a citation-format effect but also changes the structured plan.
 
 A construct-validity check gives the boundary of this diagnostic. The public source-label split has zero public context-audio rows, two target utterances, two role labels, one scene label, and fifteen emotion-intensity keys. A deterministic train-set lookup keyed only by source emotion and intensity reaches 1.000 exact-plan accuracy on the test split. The current release therefore tests source-record accounting and verifier behavior, not broad dialogue, role, or scene generalization.
 
 Table~\ref{tab:model-checks} gives a less flattering but useful view of learned variants. All three variants maintain exact evidence precision/recall on completed predictions, but they leave many examples without valid predictions. The rows are diagnostic rather than ranked: they show that evidence citation may look solved while the plan remains underfit, and that coverage and calibration still require additional validation before model-comparison claims.
 
-Table~\ref{tab:acoustic-preflight} confirms that the acoustic channel is non-empty and varies across the evaluated speech cases. These statistics are not a substitute for a perceptual study, but they make it possible to test whether future planners actually use acoustic evidence rather than only transcript text.
+Table~\ref{tab:acoustic-preflight} confirms that the dependency-free feature rows are present and variable. These statistics are not a substitute for a perceptual study or planner-ranking evidence; they only check that future acoustic-control experiments have a usable input channel.
 
 \section{Limitations}
 The current results are intentionally bounded. The source-label diagnostic is not a claim of broad benchmark superiority, and the model checks still suffer from incomplete valid prediction coverage. The paper also does not evaluate listener judgments, generated-speech user ratings, or real-world release behavior. Those questions require a separate study design with recruited raters and stronger generation provenance. The contribution here is the process layer: before asking downstream user questions, we ask whether the model grounds its reasoning in the evidence it claims to use.
