@@ -35,7 +35,7 @@ Our contributions are:
 \begin{itemize}
     \item a formal process-supervision target for speech reasoning, separating evidence selection, speaking-plan prediction, and counterfactual cue consistency;
     \item a listener-free evaluation protocol with source-label provenance, leakage controls, and automatic metrics tied to concrete claim boundaries;
-    \item a reproducible public code release that rebuilds the main tables without site-specific job launch files; and
+    \item a reproducible public code release that rebuilds the main numeric results without site-specific job launch files; and
     \item empirical diagnostics showing that evidence-grounded planning can close large gaps against a text-only control while model-scale and preference variants reveal remaining plan-coverage weaknesses.
 \end{itemize}
 
@@ -98,7 +98,7 @@ Table~\ref{tab:acoustic-preflight} confirms that the acoustic channel is non-emp
 The current results are intentionally bounded. The source-label diagnostic is not a claim of broad benchmark superiority, and the model checks still suffer from incomplete valid prediction coverage. The paper also does not evaluate listener judgments, generated-speech user ratings, or real-world release behavior. Those questions require a separate study design with recruited raters and stronger generation provenance. The contribution here is the process layer: before asking downstream user questions, we ask whether the model can ground its reasoning in the evidence it claims to use.
 
 \section{Reproducibility}
-The public repository includes the venue-neutral manuscript, the 100-case VoxReasonBench source-label split, planner prompt files, gold planner outputs, compact result files, table-generation code, scoring code, and tests. Validate the benchmark data, rebuild prompts, score gold test predictions, and recreate the tables with:
+The public repository includes the paper source, the 100-case VoxReasonBench source-label split, planner prompt files, gold planner outputs, compact result files, result-reproduction code, scoring code, and tests. Validate the benchmark data, rebuild prompts, score gold test predictions, and recreate the derived result files with:
 \begin{verbatim}
 python3 scripts/validate_benchmark_data.py
 python3 scripts/build_benchmark_prompts.py

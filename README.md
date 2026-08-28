@@ -7,12 +7,12 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 - `paper/main.tex`: paper source describing the method and benchmark.
 - `CITATION.cff` and `DATA_USE.md`: citation and data-use notes for the code and benchmark.
 - `data/benchmark/source_label/`: VoxReasonBench public case splits, prompt files, and gold planner outputs.
-- `scripts/reproduce_results.py`: regenerates the paper tables and public summary from compact result inputs.
+- `scripts/reproduce_results.py`: rebuilds derived result files from compact result inputs.
 - `scripts/build_benchmark_prompts.py`: rebuilds planner prompts from the public benchmark cases.
 - `scripts/score_predictions.py`: scores model predictions against the public benchmark cases.
 - `scripts/check_benchmark_files.py`: verifies benchmark checksums and public case validity.
 - `src/voxreason_public/`: small readers and aggregators for the public result files.
-- `data/results/`: compact public result inputs used to rebuild the paper tables.
+- `data/results/`: compact public result inputs used by the reproduction scripts.
 - `tests/`: reproducibility and public-hygiene checks.
 
 This repository intentionally excludes generated tables, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
@@ -67,15 +67,13 @@ python3 scripts/reproduce_results.py
 python3 -m pytest
 ```
 
-Expected table highlights:
+Expected score highlights:
 
-| Setting | Evidence F1 | Plan acc. | Grounded | Halluc. rate |
-| --- | ---: | ---: | ---: | ---: |
-| Text-only control | 0.857 | 0.185 | 0.569 | 0.000 |
-| Evidence-grounded planner | 1.000 | 1.000 | 1.000 | 0.000 |
-| Qwen2.5-3B SFT | 1.000 | 0.811 | 0.915 | 0.000 |
-| Qwen2.5-7B SFT | 1.000 | 0.725 | 0.876 | 0.000 |
-| Qwen2.5-7B preference | 1.000 | 0.689 | 0.860 | 0.000 |
+- Text-only control: evidence F1 `0.857`, plan accuracy `0.185`, grounded score `0.569`, hallucinated-evidence rate `0.000`.
+- Evidence-grounded planner: evidence F1 `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, grounded score `0.915`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, grounded score `0.876`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, grounded score `0.860`, hallucinated-evidence rate `0.000`.
 
 ## Citation
 
