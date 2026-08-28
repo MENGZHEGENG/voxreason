@@ -1,6 +1,7 @@
 \documentclass{article}
 
-\usepackage{iclr2026_conference,times}
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
 \input{math_commands.tex}
 
 \usepackage{booktabs}
@@ -113,7 +114,7 @@ Table~\ref{tab:acoustic-preflight} confirms that the acoustic channel is non-emp
 The current results are intentionally bounded. The source-label diagnostic is not a claim of broad benchmark superiority, and the model checks still suffer from incomplete valid prediction coverage. The paper also does not evaluate listener judgments, generated-speech user ratings, or real-world release behavior. Those questions require a separate study design with recruited raters and stronger generation provenance. The contribution here is the process layer: before asking downstream user questions, we ask whether the model can ground its reasoning in the evidence it claims to use.
 
 \section{Reproducibility}
-The public repository includes the ICLR-style manuscript, compact public result files, table-generation code, figure-generation code, and tests. Recreate the tables and figures with:
+The public repository includes the venue-neutral manuscript, compact public result files, table-generation code, figure-generation code, and tests. Recreate the tables and figures with:
 \begin{verbatim}
 python3 scripts/reproduce_results.py
 python3 scripts/draw_figures.py
@@ -151,7 +152,7 @@ Codec Does Matter.
 \bibitem[AudioX(2026)]{audiox2026}
 AudioX.
 \newblock AudioX: A unified framework for anything-to-audio generation.
-\newblock ICLR / arXiv:2503.10522, 2026.
+\newblock arXiv:2503.10522, 2026.
 
 \bibitem[Speech Representation(2026)]{speechrepresentation2026}
 Speech Representation.
@@ -161,7 +162,7 @@ Speech Representation.
 \bibitem[Spatial Audio(2025)]{spatialaudio2025}
 Spatial Audio.
 \newblock Both ears wide open: Towards language-driven spatial audio generation.
-\newblock ICLR / arXiv:2410.10676, 2025.
+\newblock arXiv:2410.10676, 2025.
 
 \bibitem[Spark-TTS(2025)]{sparktts2025}
 Spark-TTS.
@@ -171,7 +172,7 @@ Spark-TTS.
 \bibitem[PrismAudio(2026)]{prismaudio2026}
 PrismAudio.
 \newblock PrismAudio: Decomposed chain-of-thoughts and multi-dimensional rewards for video-to-audio generation.
-\newblock ICLR / arXiv:2511.18833, 2026.
+\newblock arXiv:2511.18833, 2026.
 
 \end{thebibliography}
 

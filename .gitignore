@@ -2,10 +2,13 @@ __pycache__/
 .pytest_cache/
 *.pyc
 paper/build/
+paper/figures/*.tex
+paper/tables/*.tex
 paper/*.aux
 paper/*.bbl
 paper/*.blg
 paper/*.log
 paper/*.out
 paper/*.pdf
+data/results/public_summary.json
 .DS_Store

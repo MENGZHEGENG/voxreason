@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "build"}
@@ -33,6 +34,8 @@ FORBIDDEN_WORDS = [
     "human" + "-preference",
     "listener" + "-perceived",
     "deployment" + "-readiness",
+    "ic" + "lr",
+    "open" + "review",
 ]
 FORBIDDEN = re.compile(
     r"\b(?:" + "|".join(re.escape(word) for word in FORBIDDEN_WORDS) + r")\b|" + re.escape("/scr" + "atch/"),
@@ -72,5 +75,34 @@ def test_no_cluster_launch_files_are_present() -> None:
         if path.is_file()
         and not any(part in SKIP_DIRS for part in path.relative_to(ROOT).parts)
         and (path.suffix in disallowed_suffixes or path.name in disallowed_names)
+    ]
+    assert offenders == []
+
+
+def test_public_file_names_are_venue_neutral() -> None:
+    forbidden = re.compile(r"ic" + "lr|open" + "review", re.IGNORECASE)
+    offenders = [
+        str(path.relative_to(ROOT))
+        for path in ROOT.rglob("*")
+        if not any(part in SKIP_DIRS for part in path.relative_to(ROOT).parts)
+        and forbidden.search(str(path.relative_to(ROOT)))
+    ]
+    assert offenders == []
+
+
+def test_generated_paper_outputs_are_not_tracked() -> None:
+    tracked = subprocess.run(
+        ["git", "ls-files"],
+        cwd=ROOT,
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    ).stdout.splitlines()
+    offenders = [
+        path
+        for path in tracked
+        if path.startswith("paper/tables/")
+        or path.startswith("paper/figures/")
+        or path == "data/results/public_summary.json"
     ]
     assert offenders == []
