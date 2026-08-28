@@ -14,6 +14,7 @@ from voxreason_public.results import (  # noqa: E402
     load_model_runs,
     load_source_label_summary,
     summarize_acoustic_rows,
+    summarize_construct_validity,
     summarize_model_runs,
 )
 
@@ -106,6 +107,7 @@ def main() -> None:
     model_rows = summarize_model_runs(runs)
     source_label = load_source_label_summary(ROOT)
     acoustic = summarize_acoustic_rows(ROOT)
+    construct_validity = summarize_construct_validity(ROOT)
     write_model_table(model_rows, tables / "listener_free_model_results.tex")
     write_source_label_table(source_label, tables / "source_label_upper_bound.tex")
     write_acoustic_table(acoustic, tables / "acoustic_preflight_summary.tex")
@@ -118,12 +120,16 @@ def main() -> None:
             "paired_cases": source_label["paired_cases"],
             "text_only_control": source_by_id["text_neutral_control"],
             "evidence_grounded": source_by_id["source_label_evidence_planner"],
+            "construct_validity": construct_validity,
             "pairwise": source_label["pairwise"],
         },
         "acoustic_preflight": acoustic,
     }
     out = ROOT / "data/results/public_summary.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    construct_out = ROOT / "data/results/source_label_construct_validity.json"
+    construct_out.write_text(json.dumps(construct_validity, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2, sort_keys=True))
 
 

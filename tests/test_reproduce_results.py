@@ -17,6 +17,7 @@ def test_reproduce_results_generates_expected_outputs() -> None:
         ROOT / "paper/tables/source_label_upper_bound.tex",
         ROOT / "paper/tables/acoustic_preflight_summary.tex",
         ROOT / "data/results/public_summary.json",
+        ROOT / "data/results/source_label_construct_validity.json",
     ]
     for path in expected_paths:
         assert path.exists(), path
@@ -26,6 +27,12 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert source["num_cases"] == 100
     assert source["evidence_grounded"]["plan_slot_accuracy"] == 1.0
     assert source["text_only_control"]["plan_slot_accuracy"] == 0.185
+    construct = source["construct_validity"]
+    assert construct["broad_benchmark_ready"] is False
+    assert construct["public_context_audio_rows"] == 0
+    assert construct["unique_target_texts"] == 2
+    assert construct["unique_scene_labels"] == 1
+    assert construct["lookup_exact_plan_accuracy"] == 1.0
 
     models = {row["model"]: row for row in summary["model_results"]}
     assert set(models) == {"Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"}

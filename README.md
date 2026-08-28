@@ -63,6 +63,8 @@ If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on
 
 The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, plan-slot accuracy, grounded score, hallucinated-evidence rate, counterfactual cue consistency, and lightweight acoustic preflight checks. It does not report listener judgments or waveform user ratings.
 
+The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, and a source emotion/intensity lookup with test exact-plan accuracy `1.000`. Treat learned-model rows as diagnostics, not broad benchmark rankings.
+
 ## Main Reproduction Commands
 
 ```bash
