@@ -90,10 +90,15 @@ python3 scripts/reproduce_results.py
 python3 -m pytest
 ```
 
-Expected score highlights:
+Expected deterministic score highlights from bundled benchmark files:
 
 - Text-only control: evidence F1 `0.857`, plan accuracy `0.185`, grounded score `0.569`, hallucinated-evidence rate `0.000`.
 - Source-label upper bound: evidence F1 `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
+
+The bundled learned-run summaries are included as a lightweight smoke check for the scorer and table writers. They are not a substitute for rerunning the full multi-seed experiment set used by the manuscript; regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
+
+Bundled smoke-check learned-run summaries:
+
 - Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, grounded score `0.915`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, grounded score `0.876`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, grounded score `0.860`, hallucinated-evidence rate `0.000`.
