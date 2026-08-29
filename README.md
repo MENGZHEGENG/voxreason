@@ -12,6 +12,7 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 - `scripts/reproduce_results.py`: rebuilds derived result files from compact result inputs.
 - `scripts/build_anonymous_review_package.py`: creates a local anonymous review package when a venue requires anonymous materials.
 - `scripts/build_benchmark_prompts.py`: rebuilds planner prompts from the public benchmark cases.
+- `scripts/build_source_key_holdout_split.py`: rebuilds the source-key-disjoint split for anti-shortcut checks.
 - `scripts/score_predictions.py`: scores model predictions against the public benchmark cases.
 - `scripts/check_benchmark_files.py`: verifies benchmark checksums and public case validity.
 - `src/voxreason_public/`: small readers and aggregators for the public result files.
@@ -43,6 +44,7 @@ python3 -m pip install -e . pytest
 python3 scripts/validate_benchmark_data.py
 python3 scripts/check_benchmark_files.py
 python3 scripts/build_benchmark_prompts.py
+python3 scripts/build_source_key_holdout_split.py
 python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 python3 scripts/reproduce_results.py
 python3 -m pytest
@@ -85,6 +87,7 @@ The source-label split is intentionally narrow. `scripts/reproduce_results.py` a
 python3 scripts/validate_benchmark_data.py
 python3 scripts/check_benchmark_files.py
 python3 scripts/build_benchmark_prompts.py
+python3 scripts/build_source_key_holdout_split.py
 python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 python3 scripts/reproduce_results.py
 python3 -m pytest

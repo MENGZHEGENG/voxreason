@@ -1,0 +1,53 @@
+{
+  "case_count": 100,
+  "claim_boundary": "This split tests source-key transfer for automatic planner diagnostics only; it does not report listener judgments or waveform user ratings.",
+  "dev_source_keys": 3,
+  "heldout_ready": true,
+  "prompt_counts": {
+    "dev_evidence_grounded_prompts": 16,
+    "dev_gold_predictions": 16,
+    "dev_transcript_only_prompts": 16,
+    "test_evidence_grounded_prompts": 24,
+    "test_gold_predictions": 24,
+    "test_transcript_only_prompts": 24,
+    "train_evidence_grounded_sft": 60,
+    "train_transcript_only_sft": 60
+  },
+  "seed": 20260829,
+  "source": "data/benchmark/source_label/splits",
+  "source_key_overlap_counts": {
+    "dev_test": 0,
+    "train_dev": 0,
+    "train_test": 0
+  },
+  "split_case_counts": {
+    "dev": 16,
+    "test": 24,
+    "train": 60
+  },
+  "split_id": "voxreason_source_key_holdout_v1",
+  "split_source_keys": {
+    "dev": [
+      "disgust:strong",
+      "neutral:normal",
+      "surprised:strong"
+    ],
+    "test": [
+      "angry:strong",
+      "fearful:normal",
+      "happy:strong"
+    ],
+    "train": [
+      "angry:normal",
+      "calm:normal",
+      "calm:strong",
+      "disgust:normal",
+      "fearful:strong",
+      "happy:normal",
+      "sad:normal",
+      "sad:strong",
+      "surprised:normal"
+    ]
+  },
+  "test_source_keys": 3
+}
