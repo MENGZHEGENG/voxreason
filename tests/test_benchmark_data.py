@@ -69,6 +69,23 @@ def test_source_key_holdout_split_is_key_disjoint() -> None:
     assert validate_cases([row for rows in split_cases.values() for row in rows])["issues"] == []
 
 
+def test_source_emotion_holdout_split_is_emotion_disjoint() -> None:
+    subprocess.run([sys.executable, "scripts/build_source_emotion_holdout_split.py"], cwd=ROOT, check=True)
+
+    holdout_root = ROOT / "data/benchmark/source_label/source_emotion_holdout"
+    split_cases = {split: read_jsonl(holdout_root / "splits" / f"{split}_cases_public.jsonl") for split in ("train", "dev", "test")}
+    emotions = {split: {source_key(row)[0] for row in rows} for split, rows in split_cases.items()}
+    summary = json.loads((holdout_root / "summary.json").read_text(encoding="utf-8"))
+
+    assert {split: len(rows) for split, rows in split_cases.items()} == {"train": 56, "dev": 12, "test": 32}
+    assert emotions["train"].isdisjoint(emotions["dev"])
+    assert emotions["train"].isdisjoint(emotions["test"])
+    assert emotions["dev"].isdisjoint(emotions["test"])
+    assert summary["heldout_ready"] is True
+    assert summary["source_emotion_overlap_counts"] == {"dev_test": 0, "train_dev": 0, "train_test": 0}
+    assert validate_cases([row for rows in split_cases.values() for row in rows])["issues"] == []
+
+
 def test_gold_predictions_score_perfectly() -> None:
     cases = {case["case_id"]: case for case in load_split_cases(ROOT, split="test")}
     gold_rows = []
@@ -93,6 +110,7 @@ def test_benchmark_scripts_run() -> None:
     subprocess.run([sys.executable, "scripts/check_benchmark_files.py"], cwd=ROOT, check=True)
     subprocess.run([sys.executable, "scripts/build_benchmark_prompts.py"], cwd=ROOT, check=True)
     subprocess.run([sys.executable, "scripts/build_source_key_holdout_split.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/build_source_emotion_holdout_split.py"], cwd=ROOT, check=True)
     subprocess.run(
         [
             sys.executable,

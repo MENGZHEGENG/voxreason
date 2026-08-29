@@ -18,6 +18,11 @@ The public split contains 100 source-label cases:
 
 Each case contains a case identifier, source information, transcript text, permitted evidence cues, structured speaking-plan labels, and counterfactual cue edits. The files under `data/benchmark/source_label/` also include prompt variants, gold planner outputs for development and test scoring, and training preference pairs derived from automatic evidence and plan checks.
 
+Two stricter public split variants are included for anti-shortcut checks:
+
+- `source_key_holdout/`: holds out emotion/intensity source keys across train, development, and test.
+- `source_emotion_holdout/`: holds out full source-emotion labels across train, development, and test; the released train/development/test counts are `56/12/32`.
+
 ## Task Variants
 
 - Evidence-grounded planning: the model receives transcript text plus permitted cue evidence and predicts citations and speaking-plan slots.
@@ -46,6 +51,8 @@ From the repository root, run:
 python3 scripts/validate_benchmark_data.py
 python3 scripts/check_benchmark_files.py
 python3 scripts/build_benchmark_prompts.py
+python3 scripts/build_source_key_holdout_split.py
+python3 scripts/build_source_emotion_holdout_split.py
 python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 python3 scripts/reproduce_results.py
 python3 -m pytest

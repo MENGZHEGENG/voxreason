@@ -10,6 +10,7 @@ VoxReason is a public code package for evidence-grounded speech reasoning. It in
 - `scripts/reproduce_results.py`: rebuilds derived result files from compact result inputs.
 - `scripts/build_benchmark_prompts.py`: rebuilds planner prompts from the public benchmark cases.
 - `scripts/build_source_key_holdout_split.py`: rebuilds the source-key-disjoint split for anti-shortcut checks.
+- `scripts/build_source_emotion_holdout_split.py`: rebuilds the source-emotion-disjoint split for stricter anti-shortcut checks.
 - `scripts/score_predictions.py`: scores model predictions against the public benchmark cases.
 - `scripts/check_benchmark_files.py`: verifies benchmark checksums and public case validity.
 - `src/voxreason_public/`: small readers and aggregators for the public result files.
@@ -32,6 +33,7 @@ python3 scripts/validate_benchmark_data.py
 python3 scripts/check_benchmark_files.py
 python3 scripts/build_benchmark_prompts.py
 python3 scripts/build_source_key_holdout_split.py
+python3 scripts/build_source_emotion_holdout_split.py
 python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 python3 scripts/reproduce_results.py
 python3 -m pytest
@@ -48,7 +50,7 @@ The generated files are intentionally ignored by Git:
 
 The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, citation-required grounded score, ungated grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
 
-The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, `15/15` deterministic source emotion/intensity mappings, and `100/100` gold plans covered by the prompt taxonomy. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. The script also writes `data/results/source_key_holdout_prior_only.json`: on the source-key-disjoint split, a source-emotion-only prior reaches exact-plan accuracy `0.667` and plan-slot accuracy `0.958` without the case record or citations, but counterfactual consistency is `0.000`. Treat learned-model rows as diagnostics, not broad speech-benchmark or learned-model ordering claims.
+The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, `15/15` deterministic source emotion/intensity mappings, and `100/100` gold plans covered by the prompt taxonomy. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. The script also writes `data/results/source_key_holdout_prior_only.json`: on the source-key-disjoint split, a source-emotion-only prior reaches exact-plan accuracy `0.667` and plan-slot accuracy `0.958` without the case record or citations, but counterfactual consistency is `0.000`. The source-emotion holdout split has train/dev/test counts `56/12/32` with no source-emotion overlap across splits. Treat learned-model rows as diagnostics, not broad speech-benchmark or learned-model ordering claims.
 
 ## Main Reproduction Commands
 
@@ -57,6 +59,7 @@ python3 scripts/validate_benchmark_data.py
 python3 scripts/check_benchmark_files.py
 python3 scripts/build_benchmark_prompts.py
 python3 scripts/build_source_key_holdout_split.py
+python3 scripts/build_source_emotion_holdout_split.py
 python3 scripts/score_predictions.py data/benchmark/source_label/test_gold_predictions.jsonl --split test
 python3 scripts/reproduce_results.py
 python3 -m pytest

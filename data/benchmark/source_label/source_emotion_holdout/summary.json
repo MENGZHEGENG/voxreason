@@ -1,0 +1,79 @@
+{
+  "case_count": 100,
+  "claim_boundary": "This split tests source-emotion transfer for automatic planner diagnostics only; it does not report listener judgments or waveform user ratings.",
+  "dev_source_emotions": [
+    "fearful"
+  ],
+  "heldout_ready": true,
+  "prompt_counts": {
+    "dev_evidence_grounded_prompts": 12,
+    "dev_gold_predictions": 12,
+    "dev_transcript_only_prompts": 12,
+    "test_evidence_grounded_prompts": 32,
+    "test_gold_predictions": 32,
+    "test_transcript_only_prompts": 32,
+    "train_evidence_grounded_sft": 56,
+    "train_transcript_only_sft": 56
+  },
+  "seed": 20260830,
+  "source": "data/benchmark/source_label/splits",
+  "source_emotion_overlap_counts": {
+    "dev_test": 0,
+    "train_dev": 0,
+    "train_test": 0
+  },
+  "source_key_overlap_counts": {
+    "dev_test": 0,
+    "train_dev": 0,
+    "train_test": 0
+  },
+  "split_case_counts": {
+    "dev": 12,
+    "test": 32,
+    "train": 56
+  },
+  "split_id": "voxreason_source_emotion_holdout_v1",
+  "split_source_emotions": {
+    "dev": [
+      "fearful"
+    ],
+    "test": [
+      "angry",
+      "calm"
+    ],
+    "train": [
+      "disgust",
+      "happy",
+      "neutral",
+      "sad",
+      "surprised"
+    ]
+  },
+  "split_source_keys": {
+    "dev": [
+      "fearful:normal",
+      "fearful:strong"
+    ],
+    "test": [
+      "angry:normal",
+      "angry:strong",
+      "calm:normal",
+      "calm:strong"
+    ],
+    "train": [
+      "disgust:normal",
+      "disgust:strong",
+      "happy:normal",
+      "happy:strong",
+      "neutral:normal",
+      "sad:normal",
+      "sad:strong",
+      "surprised:normal",
+      "surprised:strong"
+    ]
+  },
+  "test_source_emotions": [
+    "angry",
+    "calm"
+  ]
+}
