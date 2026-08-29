@@ -131,6 +131,21 @@ def test_public_paper_author_metadata_is_anonymous() -> None:
     assert "github.com" not in text.lower()
 
 
+def test_public_paper_citations_match_bibliography_source() -> None:
+    paper = (ROOT / "paper/main.tex").read_text(encoding="utf-8")
+    references = (ROOT / "paper/references.bib").read_text(encoding="utf-8")
+    cited = {
+        key.strip()
+        for citation in re.finditer(r"\\cite\w*\{([^}]+)\}", paper)
+        for key in citation.group(1).split(",")
+    }
+    entries = set(re.findall(r"@\w+\{([^,]+),", references))
+
+    assert cited - entries == set()
+    assert entries - cited == set()
+    assert "\\bibliography{references}" in paper
+
+
 def test_anonymous_review_package_redacts_repository_identity(tmp_path: Path) -> None:
     out_path = tmp_path / "voxreason-anonymous-review.zip"
     subprocess.run(
