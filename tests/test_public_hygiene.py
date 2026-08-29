@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 import subprocess
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "build"}
@@ -119,7 +120,35 @@ def test_public_release_has_citation_and_data_use_notes() -> None:
     assert (ROOT / "BENCHMARK.md").is_file()
     assert (ROOT / "CITATION.cff").is_file()
     assert (ROOT / "DATA_USE.md").is_file()
+    assert (ROOT / "LICENSE").is_file()
     assert (ROOT / "data/benchmark/source_label/summary.json").is_file()
+
+
+def test_public_paper_author_metadata_is_anonymous() -> None:
+    text = (ROOT / "paper/main.tex").read_text(encoding="utf-8")
+    assert "\\author{Anonymous Authors}" in text
+    assert "MENGZHEGENG" not in text
+    assert "github.com" not in text.lower()
+
+
+def test_anonymous_review_package_redacts_repository_identity(tmp_path: Path) -> None:
+    out_path = tmp_path / "voxreason-anonymous-review.zip"
+    subprocess.run(
+        ["python3", "scripts/build_anonymous_review_package.py", "--out", str(out_path)],
+        cwd=ROOT,
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    assert out_path.is_file()
+    with zipfile.ZipFile(out_path) as archive:
+        names = set(archive.namelist())
+        assert "voxreason-anonymous-review/.git/config" not in names
+        assert "voxreason-anonymous-review/LICENSE" in names
+        citation = archive.read("voxreason-anonymous-review/CITATION.cff").decode("utf-8")
+        paper = archive.read("voxreason-anonymous-review/paper/main.tex").decode("utf-8")
+    assert "MENGZHEGENG" not in citation + paper
+    assert "github.com/MENGZHEGENG" not in citation + paper
 
 
 def test_public_paper_avoids_ambiguous_modal_claims() -> None:

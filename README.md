@@ -7,8 +7,10 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 - `paper/main.tex`: paper source describing the method and benchmark.
 - `BENCHMARK.md`: benchmark card with scope, split, metric, and source-data details.
 - `CITATION.cff` and `DATA_USE.md`: citation and data-use notes for the code and benchmark.
+- `LICENSE`: code and documentation license; benchmark records remain subject to `DATA_USE.md`.
 - `data/benchmark/source_label/`: VoxReasonBench public case splits, prompt files, and gold planner outputs.
 - `scripts/reproduce_results.py`: rebuilds derived result files from compact result inputs.
+- `scripts/build_anonymous_review_package.py`: creates a local anonymous review package when a venue requires anonymous materials.
 - `scripts/build_benchmark_prompts.py`: rebuilds planner prompts from the public benchmark cases.
 - `scripts/score_predictions.py`: scores model predictions against the public benchmark cases.
 - `scripts/check_benchmark_files.py`: verifies benchmark checksums and public case validity.
@@ -17,6 +19,16 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 - `tests/`: reproducibility and public-hygiene checks.
 
 This repository intentionally excludes generated tables, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
+
+## Anonymous Review Package
+
+This hosted repository may identify maintainers through its URL and Git history. For anonymous peer review, do not link the hosted repository directly. Build a local review package instead:
+
+```bash
+python3 scripts/build_anonymous_review_package.py
+```
+
+The package is written to `dist/voxreason-anonymous-review.zip`. It includes the tracked public files, omits Git history and regenerated outputs, and redacts the repository URL from `CITATION.cff` while keeping author metadata anonymous.
 
 ## Benchmark Scope
 
