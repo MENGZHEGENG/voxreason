@@ -251,6 +251,15 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         key: dict(json.loads(sorted(counter.items(), key=lambda item: (-item[1], item[0]))[0][0]))
         for key, counter in grouped.items()
     }
+    prior_grouped: dict[str, Counter[str]] = defaultdict(Counter)
+    for case in train_cases:
+        emotion = _source_key(case)[0]
+        if emotion:
+            prior_grouped[emotion][_plan_signature(dict(case.get("gold_plan", {})))] += 1
+    prior_lookup = {
+        emotion: dict(json.loads(sorted(counter.items(), key=lambda item: (-item[1], item[0]))[0][0]))
+        for emotion, counter in prior_grouped.items()
+    }
     fallback = _majority_plan(train_cases)
 
     exact_matches = 0
@@ -258,9 +267,13 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     slot_scores: list[float] = []
     key_holdout_exact_matches = 0
     key_holdout_slot_scores: list[float] = []
+    prior_exact_matches = 0
+    prior_seen_keys = 0
+    prior_slot_scores: list[float] = []
     heldout_keys: set[tuple[str, str]] = set()
     for case in test_cases:
         key = _source_key(case)
+        emotion = key[0]
         heldout_keys.add(key)
         if key in lookup:
             seen_keys += 1
@@ -268,6 +281,12 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         gold_plan = dict(case.get("gold_plan", {}))
         exact_matches += int(_plan_signature(prediction) == _plan_signature(gold_plan))
         slot_scores.append(plan_slot_accuracy(prediction, gold_plan))
+
+        if emotion in prior_lookup:
+            prior_seen_keys += 1
+        prior_prediction = prior_lookup.get(emotion, fallback)
+        prior_exact_matches += int(_plan_signature(prior_prediction) == _plan_signature(gold_plan))
+        prior_slot_scores.append(plan_slot_accuracy(prior_prediction, gold_plan))
 
         reduced_train = [row for row in train_cases if _source_key(row) != key]
         reduced_grouped: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
@@ -318,5 +337,11 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "leave_key_out_heldout_keys": len(heldout_keys),
         "leave_key_out_exact_plan_accuracy": key_holdout_exact_matches / denominator,
         "leave_key_out_plan_slot_accuracy": mean(key_holdout_slot_scores) if key_holdout_slot_scores else 0.0,
+        "prior_only_field": "source_emotion",
+        "prior_only_train_keys": len(prior_lookup),
+        "prior_only_ambiguous_train_keys": sum(1 for counter in prior_grouped.values() if len(counter) > 1),
+        "prior_only_test_keys_seen_in_train": prior_seen_keys,
+        "prior_only_exact_plan_accuracy": prior_exact_matches / denominator,
+        "prior_only_plan_slot_accuracy": mean(prior_slot_scores) if prior_slot_scores else 0.0,
         "plan_fields": list(PLAN_FIELDS) + ["emphasis"],
     }

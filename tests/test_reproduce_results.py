@@ -49,6 +49,12 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["leave_key_out_heldout_keys"] == 10
     assert construct["leave_key_out_exact_plan_accuracy"] == 0.0
     assert construct["leave_key_out_plan_slot_accuracy"] == 0.2421875
+    assert construct["prior_only_field"] == "source_emotion"
+    assert construct["prior_only_train_keys"] == 8
+    assert construct["prior_only_ambiguous_train_keys"] == 5
+    assert construct["prior_only_test_keys_seen_in_train"] == 16
+    assert construct["prior_only_exact_plan_accuracy"] == 0.625
+    assert construct["prior_only_plan_slot_accuracy"] == 0.953125
     acoustic_anchor = source["acoustic_anchor"]
     assert acoustic_anchor["anchor_ready"] is True
     assert acoustic_anchor["matched_cases"] == 100
