@@ -41,6 +41,8 @@ The generated files are intentionally ignored by Git:
 - `outputs/`
 - `paper/tables/*.tex`
 - `data/results/public_summary.json`
+- `data/results/source_label_construct_validity.json`
+- `data/results/source_label_acoustic_anchor.json`
 
 ## Build The Paper
 
@@ -61,9 +63,9 @@ If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on
 
 ## Claim Boundary
 
-The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, plan-slot accuracy, grounded score, hallucinated-evidence rate, counterfactual cue consistency, and lightweight acoustic preflight checks. It does not report listener judgments or waveform user ratings.
+The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, plan-slot accuracy, grounded score, hallucinated-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
 
-The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, and a source emotion/intensity lookup with test exact-plan accuracy `1.000`. Treat learned-model rows as diagnostics, not broad benchmark rankings.
+The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, and a source emotion/intensity lookup with test exact-plan accuracy `1.000`. It also writes `data/results/source_label_acoustic_anchor.json`, where strong-intensity labels have higher RMS than normal labels and raised-pitch plan labels have higher rough pitch than lowered-pitch labels. Treat learned-model rows as diagnostics, not broad benchmark rankings.
 
 ## Main Reproduction Commands
 

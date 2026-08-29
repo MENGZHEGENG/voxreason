@@ -12,5 +12,6 @@ paper/*.out
 paper/*.pdf
 data/results/public_summary.json
 data/results/source_label_construct_validity.json
+data/results/source_label_acoustic_anchor.json
 outputs/
 .DS_Store

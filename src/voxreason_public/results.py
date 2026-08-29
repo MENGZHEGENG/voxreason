@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import random
 from statistics import mean, pstdev
 from collections import Counter, defaultdict
 from typing import Iterable
@@ -22,6 +23,15 @@ MODEL_LABELS = {
     "82939": "Qwen2.5-7B SFT",
     "82941": "Qwen2.5-7B preference",
 }
+
+ACOUSTIC_ANCHOR_CONTRASTS = (
+    ("source_intensity_rms", "metadata.source_intensity", "strong", "normal", "rms"),
+    ("source_intensity_peak", "metadata.source_intensity", "strong", "normal", "peak"),
+    ("source_intensity_pitch", "metadata.source_intensity", "strong", "normal", "rough_pitch_hz"),
+    ("plan_pitch_rough_pitch", "gold_plan.pitch", "raised", "lowered", "rough_pitch_hz"),
+    ("plan_energy_rms", "gold_plan.energy", "high", "low", "rms"),
+    ("plan_rate_zcr", "gold_plan.rate", "fast", "slow", "zero_crossing_rate"),
+)
 
 
 @dataclass(frozen=True)
@@ -96,6 +106,106 @@ def summarize_acoustic_rows(root: Path) -> dict[str, float | int]:
         values = [float(feature[key]) for feature in feature_rows if key in feature]
         summary[f"{key}_mean"] = mean(values) if values else 0.0
     return summary
+
+
+def _feature_by_case(root: Path) -> dict[str, dict[str, object]]:
+    paths = sorted((root / "data/results/listener_free_outputs/82940").glob("**/audio_features.public.jsonl"))
+    features: dict[str, dict[str, object]] = {}
+    for path in paths:
+        for row in read_jsonl(path):
+            case_id = str(row.get("case_id", "")).strip()
+            if not case_id:
+                continue
+            for feature in row.get("features", []):
+                if isinstance(feature, dict) and feature.get("status") == "ok":
+                    features.setdefault(case_id, feature)
+                    break
+    return features
+
+
+def _nested_value(row: dict[str, object], dotted_path: str) -> str:
+    current: object = row
+    for part in dotted_path.split("."):
+        if not isinstance(current, dict):
+            return ""
+        current = current.get(part, "")
+    return str(current).strip().lower()
+
+
+def _bootstrap_ci(positive_values: list[float], negative_values: list[float], *, seed: int, samples: int) -> tuple[float, float]:
+    sampler = random.Random(seed)
+    deltas: list[float] = []
+    for _sample_index in range(samples):
+        positive_sample = [positive_values[sampler.randrange(len(positive_values))] for _ in positive_values]
+        negative_sample = [negative_values[sampler.randrange(len(negative_values))] for _ in negative_values]
+        deltas.append(mean(positive_sample) - mean(negative_sample))
+    deltas.sort()
+    return deltas[int(0.025 * (samples - 1))], deltas[int(0.975 * (samples - 1))]
+
+
+def _auc(positive_values: list[float], negative_values: list[float]) -> float:
+    wins = 0.0
+    comparisons = 0
+    for positive_value in positive_values:
+        for negative_value in negative_values:
+            comparisons += 1
+            if positive_value > negative_value:
+                wins += 1.0
+            elif positive_value == negative_value:
+                wins += 0.5
+    return wins / comparisons if comparisons else 0.0
+
+
+def summarize_acoustic_anchor(root: Path, *, samples: int = 10000, seed: int = 17) -> dict[str, object]:
+    cases = load_split_cases(root)
+    features = _feature_by_case(root)
+    matched_cases = [case for case in cases if str(case.get("case_id", "")).strip() in features]
+    contrasts: list[dict[str, object]] = []
+    for contrast_index, (contrast_id, label_source, positive_label, negative_label, feature_name) in enumerate(ACOUSTIC_ANCHOR_CONTRASTS):
+        positive_values: list[float] = []
+        negative_values: list[float] = []
+        for case in matched_cases:
+            case_id = str(case.get("case_id", "")).strip()
+            feature = features[case_id]
+            if feature_name not in feature:
+                continue
+            value = float(feature[feature_name])
+            label = _nested_value(case, label_source)
+            if label == positive_label:
+                positive_values.append(value)
+            elif label == negative_label:
+                negative_values.append(value)
+        ci_low, ci_high = _bootstrap_ci(positive_values, negative_values, seed=seed + contrast_index, samples=samples)
+        delta = mean(positive_values) - mean(negative_values)
+        contrasts.append(
+            {
+                "contrast_id": contrast_id,
+                "label_source": label_source,
+                "positive_label": positive_label,
+                "negative_label": negative_label,
+                "feature": feature_name,
+                "positive_count": len(positive_values),
+                "negative_count": len(negative_values),
+                "positive_mean": mean(positive_values),
+                "negative_mean": mean(negative_values),
+                "delta": delta,
+                "bootstrap_ci_low": ci_low,
+                "bootstrap_ci_high": ci_high,
+                "auc": _auc(positive_values, negative_values),
+                "direction_supported": delta > 0 and ci_low > 0,
+            }
+        )
+    return {
+        "scope": "source_label_acoustic_anchor",
+        "cases": len(cases),
+        "feature_rows": len(features),
+        "matched_cases": len(matched_cases),
+        "bootstrap_samples": samples,
+        "seed": seed,
+        "anchor_ready": len(matched_cases) == len(cases) and all(row["direction_supported"] for row in contrasts),
+        "claim_boundary": "Acoustic anchors check label consistency in the source-label split and do not report listener judgments.",
+        "contrasts": contrasts,
+    }
 
 
 def load_source_label_summary(root: Path) -> dict[str, object]:

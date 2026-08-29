@@ -18,6 +18,7 @@ def test_reproduce_results_generates_expected_outputs() -> None:
         ROOT / "paper/tables/acoustic_preflight_summary.tex",
         ROOT / "data/results/public_summary.json",
         ROOT / "data/results/source_label_construct_validity.json",
+        ROOT / "data/results/source_label_acoustic_anchor.json",
     ]
     for path in expected_paths:
         assert path.exists(), path
@@ -33,6 +34,14 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["unique_target_texts"] == 2
     assert construct["unique_scene_labels"] == 1
     assert construct["lookup_exact_plan_accuracy"] == 1.0
+    acoustic_anchor = source["acoustic_anchor"]
+    assert acoustic_anchor["anchor_ready"] is True
+    assert acoustic_anchor["matched_cases"] == 100
+    contrasts = {row["contrast_id"]: row for row in acoustic_anchor["contrasts"]}
+    assert contrasts["source_intensity_rms"]["delta"] > 0.017
+    assert contrasts["source_intensity_rms"]["bootstrap_ci_low"] > 0
+    assert contrasts["plan_pitch_rough_pitch"]["delta"] > 48.0
+    assert contrasts["plan_pitch_rough_pitch"]["bootstrap_ci_low"] > 0
 
     models = {row["model"]: row for row in summary["model_results"]}
     assert set(models) == {"Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"}
