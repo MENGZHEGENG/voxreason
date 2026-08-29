@@ -40,6 +40,10 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["public_context_audio_rows"] == 0
     assert construct["unique_target_texts"] == 2
     assert construct["unique_scene_labels"] == 1
+    assert construct["deterministic_source_key_mappings"] == 15
+    assert construct["source_key_mapping_count"] == 15
+    assert construct["deterministic_source_key_fraction"] == 1.0
+    assert construct["max_plans_per_source_key"] == 1
     assert construct["lookup_exact_plan_accuracy"] == 1.0
     assert construct["leave_key_out_test_cases"] == 16
     assert construct["leave_key_out_heldout_keys"] == 10

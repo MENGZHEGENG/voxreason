@@ -287,6 +287,12 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     roles = {_cue_label(case, "speaker_role") for case in all_cases if _cue_label(case, "speaker_role")}
     texts = {str(case.get("target_text", "")).strip() for case in all_cases if str(case.get("target_text", "")).strip()}
     keys = {_source_key(case) for case in all_cases if any(_source_key(case))}
+    all_grouped: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for case in all_cases:
+        all_grouped[_source_key(case)].add(_plan_signature(dict(case.get("gold_plan", {}))))
+    source_key_plan_counts = [len(signatures) for signatures in all_grouped.values()]
+    deterministic_source_keys = sum(1 for count in source_key_plan_counts if count == 1)
+    source_key_count = len(all_grouped)
 
     return {
         "scope": "controlled_source_label_diagnostic",
@@ -297,6 +303,11 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "unique_role_labels": len(roles),
         "unique_scene_labels": len(scenes),
         "unique_emotion_intensity_keys": len(keys),
+        "deterministic_source_key_mappings": deterministic_source_keys,
+        "ambiguous_source_key_mappings": sum(1 for count in source_key_plan_counts if count > 1),
+        "source_key_mapping_count": source_key_count,
+        "deterministic_source_key_fraction": deterministic_source_keys / (source_key_count or 1),
+        "max_plans_per_source_key": max(source_key_plan_counts, default=0),
         "train_lookup_keys": len(lookup),
         "ambiguous_train_keys": sum(1 for counter in grouped.values() if len(counter) > 1),
         "test_cases": len(test_cases),
