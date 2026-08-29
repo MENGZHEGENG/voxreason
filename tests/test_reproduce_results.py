@@ -47,6 +47,9 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["source_key_mapping_count"] == 15
     assert construct["deterministic_source_key_fraction"] == 1.0
     assert construct["max_plans_per_source_key"] == 1
+    assert construct["prompt_taxonomy_valid_gold_plans"] == 100
+    assert construct["prompt_taxonomy_invalid_gold_plans"] == 0
+    assert construct["prompt_taxonomy_valid_fraction"] == 1.0
     assert construct["lookup_exact_plan_accuracy"] == 1.0
     assert construct["leave_key_out_test_cases"] == 16
     assert construct["leave_key_out_heldout_keys"] == 10

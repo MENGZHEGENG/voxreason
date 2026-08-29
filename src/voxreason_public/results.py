@@ -8,7 +8,7 @@ from statistics import mean, pstdev
 from collections import Counter, defaultdict
 from typing import Iterable
 
-from voxreason_public.benchmark import ALL_PLAN_FIELDS, PLAN_FIELDS, load_split_cases, normalize_label, plan_slot_accuracy
+from voxreason_public.benchmark import ALL_PLAN_FIELDS, PLAN_FIELDS, PLAN_SCHEMA, load_split_cases, normalize_label, plan_slot_accuracy
 
 
 METRICS = (
@@ -265,6 +265,23 @@ def _counterfactual_score(original_plan: dict[str, object], counterfactual_plan:
     return expected_change_accuracy, unexpected_change_rate, max(0.0, expected_change_accuracy * (1.0 - unexpected_change_rate))
 
 
+def _prompt_taxonomy_coverage(cases: list[dict[str, object]]) -> tuple[int, int, float]:
+    choices = {
+        field: set(str(value).split("|"))
+        for field, value in PLAN_SCHEMA["plan"].items()
+        if isinstance(value, str)
+    }
+    valid = 0
+    for case in cases:
+        plan = case.get("gold_plan", {})
+        if not isinstance(plan, dict):
+            continue
+        if all(str(plan.get(field, "")).strip().lower() in allowed for field, allowed in choices.items()):
+            valid += 1
+    denominator = len(cases) or 1
+    return valid, len(cases) - valid, valid / denominator
+
+
 def summarize_construct_validity(root: Path) -> dict[str, object]:
     train_cases = load_split_cases(root, "train")
     test_cases = load_split_cases(root, "test")
@@ -353,6 +370,7 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     source_key_plan_counts = [len(signatures) for signatures in all_grouped.values()]
     deterministic_source_keys = sum(1 for count in source_key_plan_counts if count == 1)
     source_key_count = len(all_grouped)
+    taxonomy_valid, taxonomy_invalid, taxonomy_valid_fraction = _prompt_taxonomy_coverage(all_cases)
 
     return {
         "scope": "controlled_source_label_diagnostic",
@@ -368,6 +386,9 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "source_key_mapping_count": source_key_count,
         "deterministic_source_key_fraction": deterministic_source_keys / (source_key_count or 1),
         "max_plans_per_source_key": max(source_key_plan_counts, default=0),
+        "prompt_taxonomy_valid_gold_plans": taxonomy_valid,
+        "prompt_taxonomy_invalid_gold_plans": taxonomy_invalid,
+        "prompt_taxonomy_valid_fraction": taxonomy_valid_fraction,
         "train_lookup_keys": len(lookup),
         "ambiguous_train_keys": sum(1 for counter in grouped.values() if len(counter) > 1),
         "test_cases": len(test_cases),
