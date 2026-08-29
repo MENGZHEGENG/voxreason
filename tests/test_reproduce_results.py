@@ -28,6 +28,10 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert source["num_cases"] == 100
     assert source["source_label_upper_bound"]["plan_slot_accuracy"] == 1.0
     assert source["text_only_control"]["plan_slot_accuracy"] == 0.185
+    assert source["source_label_upper_bound"]["uncited_evidence_rate"] == 0.0
+    assert source["text_only_control"]["uncited_evidence_rate"] == 0.25
+    pairwise = {row["metric"]: row for row in source["pairwise"]}
+    assert pairwise["uncited_evidence_rate"]["delta_mean"] == -0.25
     construct = source["construct_validity"]
     assert construct["broad_benchmark_ready"] is False
     assert construct["public_context_audio_rows"] == 0
@@ -76,3 +80,4 @@ def test_readme_score_highlights_match_reproduced_summary() -> None:
         assert found[label]["plan"] == f"{float(row['plan_slot_accuracy'] if 'plan_slot_accuracy' in row else row['plan_slot_accuracy_mean']):.3f}"
         assert found[label]["grounded"] == f"{float(row['grounded_score'] if 'grounded_score' in row else row['grounded_score_mean']):.3f}"
         assert found[label]["hallucinated"] == f"{float(row['hallucinated_evidence_rate'] if 'hallucinated_evidence_rate' in row else row['hallucinated_evidence_rate_mean']):.3f}"
+    assert "uncited-evidence rate is `0.250` for the text-only control" in readme

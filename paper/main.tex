@@ -20,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the source evidence that governs a speaking plan. We introduce \method, a listener-free source-label diagnostic for evidence-grounded speech reasoning. A model must cite permitted source cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, counterfactual consistency, and acoustic-anchor checks. On 100 source-label cases, upper-bound reconstruction exposes a text-only gap of 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further show where larger or process-reward-tuned planners preserve evidence citation while losing plan coverage. \method is not a broad speech benchmark and does not claim listener judgments; instead, it isolates the process-supervision layer that requires verification before human listening studies are meaningful.
+Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the source evidence that governs a speaking plan. We introduce \method, a listener-free source-label diagnostic for evidence-grounded speech reasoning. A model must cite permitted source cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, uncited-evidence rate, grounded score, counterfactual consistency, and acoustic-anchor checks. On 100 source-label cases, upper-bound reconstruction exposes a text-only gap of 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further show where larger or process-reward-tuned planners preserve evidence citation while losing plan coverage. \method is not a broad speech benchmark and does not claim listener judgments; instead, it isolates the process-supervision layer that requires verification before human listening studies are meaningful.
 \end{abstract}
 
 \section{Introduction}
@@ -48,7 +48,7 @@ Recent audio language modeling work shows that representation choice changes the
 \section{Task Definition}
 Let $x_i=(c_i, a_i, r_i, u_i)$ be one speech-reasoning instance, where $c_i$ is dialogue context, $a_i$ is optional speech evidence, $r_i$ is speaker or role context, and $u_i$ is the target utterance. The supervision contains an evidence set $E_i$ and a structured speaking plan $y_i$ with slots such as emotion, intensity, pitch, energy, rate, pauses, emphasis, and stance. A system predicts cited evidence $\hat{E}_i$ and a plan $\hat{y}_i$.
 
-We evaluate four listener-free quantities. Evidence F1 compares $\hat{E}_i$ with source-labeled cues. Plan-slot accuracy averages slot-level agreement between $\hat{y}_i$ and $y_i$. Hallucinated-evidence rate penalizes citations that are not present in the source labels. Counterfactual consistency measures whether editing a cue changes only the plan slots licensed by that cue. These metrics target reasoning faithfulness rather than perceived audio quality.
+We evaluate five listener-free quantities. Evidence F1 compares $\hat{E}_i$ with source-labeled cues. Plan-slot accuracy averages slot-level agreement between $\hat{y}_i$ and $y_i$. Hallucinated-evidence rate penalizes citations that are not present in the source labels. Uncited-evidence rate reports required source cues omitted by the prediction. Counterfactual consistency measures whether editing a cue changes only the plan slots licensed by that cue. These metrics target reasoning faithfulness rather than perceived audio quality.
 
 Every result follows a fixed admission rule. A row enters the evidence column only with complete expected predictions, strict schema validity, public-safe provenance, and a listener-free endpoint declared before inspection. Parser checks, lookup ceilings, acoustic anchors, and incomplete learned runs are diagnostic rows. Results that need final seed coverage or listener ratings remain blocked or out of scope.
 
@@ -65,7 +65,7 @@ The public release includes 100 leakage-checked source-label cases derived from 
 We compare a text-only control against the evidence-grounded planner on source-label cases. We also include three-seed model checks for Qwen2.5-3B SFT, Qwen2.5-7B SFT, and Qwen2.5-7B preference tuning. These checks are diagnostic: they test whether the structured schema and evidence metrics remain stable across model variants.
 
 \paragraph{Metrics.}
-All reported metrics are automatic and listener-free. Higher is better for evidence F1, plan-slot accuracy, and grounded score. Lower is better for hallucinated-evidence rate. We also compute lightweight acoustic statistics to verify that the speech-side input channel is present and well-formed.
+All reported metrics are automatic and listener-free. Higher is better for evidence F1, plan-slot accuracy, and grounded score. Lower is better for hallucinated- and uncited-evidence rates. We also compute lightweight acoustic statistics to verify that the speech-side input channel is present and well-formed.
 
 \begin{table}[t]
 \centering
@@ -89,7 +89,7 @@ All reported metrics are automatic and listener-free. Higher is better for evide
 \end{table}
 
 \section{Results and Analysis}
-Table~\ref{tab:source-label} shows that upper-bound reconstruction reaches perfect source-label agreement on the diagnostic cases, while the text-only control misses many plan slots. The largest gap is plan accuracy: reconstruction improves from 0.185 to 1.000. Grounded score improves by 0.431, indicating that the diagnostic gap is not only a citation-format effect but also changes the structured plan.
+Table~\ref{tab:source-label} shows that upper-bound reconstruction reaches perfect source-label agreement on the diagnostic cases, while the text-only control misses many plan slots and omits required source cues. The largest gap is plan accuracy: reconstruction improves from 0.185 to 1.000. Grounded score improves by 0.431, indicating that the diagnostic gap is not only a citation-format effect but also changes the structured plan.
 
 A construct-validity check gives the boundary of this diagnostic. The public source-label split has zero public context-audio rows, two target utterances, two role labels, one scene label, and fifteen emotion-intensity keys. A deterministic train-set lookup keyed only by source emotion and intensity reaches 1.000 exact-plan accuracy on the test split. The current release therefore tests source-record accounting and verifier behavior, not broad dialogue, role, or scene generalization.
 

@@ -61,6 +61,7 @@ def write_source_label_table(summary: dict[str, object], path: Path) -> None:
         "plan_slot_accuracy": "Plan acc.",
         "grounded_score": "Grounded",
         "hallucinated_evidence_rate": "Halluc. rate",
+        "uncited_evidence_rate": "Uncited rate",
     }
     lines = [
         r"\begin{tabular}{lrrr}",

@@ -27,6 +27,13 @@
       "metric": "hallucinated_evidence_rate",
       "samples": 10000,
       "upper": 0.0
+    },
+    {
+      "lower": 0.0,
+      "mean": 0.0,
+      "metric": "uncited_evidence_rate",
+      "samples": 10000,
+      "upper": 0.0
     }
   ],
   "cases": 100,
@@ -59,6 +66,13 @@
       "delta_mean": 0.0,
       "metric": "hallucinated_evidence_rate",
       "paired_cases": 100
+    },
+    {
+      "baseline_mean": 0.25,
+      "candidate_mean": 0.0,
+      "delta_mean": -0.25,
+      "metric": "uncited_evidence_rate",
+      "paired_cases": 100
     }
   ],
   "systems": [
@@ -68,6 +82,7 @@
       "grounded_score": 0.5689642857142857,
       "hallucinated_evidence_rate": 0.0,
       "plan_slot_accuracy": 0.185,
+      "uncited_evidence_rate": 0.25,
       "system_id": "text_neutral_control"
     },
     {
@@ -76,6 +91,7 @@
       "grounded_score": 1.0,
       "hallucinated_evidence_rate": 0.0,
       "plan_slot_accuracy": 1.0,
+      "uncited_evidence_rate": 0.0,
       "system_id": "source_label_evidence_planner"
     }
   ]

@@ -4,7 +4,7 @@ VoxReasonBench is a listener-free benchmark for evidence-grounded speech reasoni
 
 ## Intended Use
 
-Use this benchmark to evaluate process supervision for speech planning before running any study with listeners. The benchmark is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, grounded score, unsupported evidence, and counterfactual cue consistency.
+Use this benchmark to evaluate process supervision for speech planning before running any study with listeners. The benchmark is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
 
 Do not use the benchmark to claim waveform quality, listener preference, or production suitability. The released files do not contain waveforms or listener ratings.
 
@@ -30,6 +30,7 @@ Each case contains a case identifier, source information, transcript text, permi
 - Plan-slot accuracy: exact agreement for structured speaking-plan fields.
 - Grounded score: combined evidence and plan score used for listener-free diagnostics.
 - Hallucinated-evidence rate: fraction of cited evidence identifiers that are not permitted for the case.
+- Uncited-evidence rate: fraction of required source cues omitted by the prediction.
 - Counterfactual cue consistency: agreement between cue edits and predicted plan changes.
 
 ## Source Data

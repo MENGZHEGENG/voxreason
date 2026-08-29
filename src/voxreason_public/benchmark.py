@@ -231,6 +231,7 @@ def score_prediction(case: dict[str, Any], prediction: dict[str, Any]) -> dict[s
     recall = matched / len(gold_cues) if gold_cues else 0.0
     evidence_f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     hallucinated_rate = 1.0 - precision if predicted_cues else 0.0
+    uncited_rate = 1.0 - recall if gold_cues else 0.0
     plan_accuracy = plan_slot_accuracy(dict(prediction.get("plan", {})), dict(case.get("gold_plan", {})))
     grounded_score = 0.45 * evidence_f1 + 0.45 * plan_accuracy + 0.10 * (1.0 - hallucinated_rate)
     return {
@@ -239,6 +240,7 @@ def score_prediction(case: dict[str, Any], prediction: dict[str, Any]) -> dict[s
         "evidence_f1": evidence_f1,
         "plan_slot_accuracy": plan_accuracy,
         "hallucinated_evidence_rate": hallucinated_rate,
+        "uncited_evidence_rate": uncited_rate,
         "grounded_score": grounded_score,
     }
 
@@ -251,6 +253,7 @@ def summarize_scores(scores: Iterable[dict[str, float]]) -> dict[str, float]:
         "evidence_f1",
         "plan_slot_accuracy",
         "hallucinated_evidence_rate",
+        "uncited_evidence_rate",
         "grounded_score",
     )
     if not score_list:
