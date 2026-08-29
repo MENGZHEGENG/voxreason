@@ -50,6 +50,8 @@ Let $x_i=(c_i, a_i, r_i, u_i)$ be one speech-reasoning instance, where $c_i$ is 
 
 We evaluate four listener-free quantities. Evidence F1 compares $\hat{E}_i$ with source-labeled cues. Plan-slot accuracy averages slot-level agreement between $\hat{y}_i$ and $y_i$. Hallucinated-evidence rate penalizes citations that are not present in the source labels. Counterfactual consistency measures whether editing a cue changes only the plan slots licensed by that cue. These metrics target reasoning faithfulness rather than perceived audio quality.
 
+Every result follows a fixed admission rule. A row enters the evidence column only with complete expected predictions, strict schema validity, public-safe provenance, and a listener-free endpoint declared before inspection. Parser checks, lookup ceilings, acoustic anchors, and incomplete learned runs are diagnostic rows. Results that need final seed coverage or listener ratings remain blocked or out of scope.
+
 \section{Method}
 \method uses a structured planner that emits machine-checkable JSON. The planner is trained or prompted to cite cue identifiers before predicting plan slots. The same schema supports supervised fine-tuning and process rewards: evidence recall rewards missing-cue recovery, evidence precision penalizes unsupported citations, and slot accuracy rewards correct speaking-plan choices. Counterfactual cue edits provide a stress test: the method is expected to revise affected slots while preserving irrelevant ones.
 
