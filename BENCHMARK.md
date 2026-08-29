@@ -1,12 +1,12 @@
 # VoxReasonBench Card
 
-VoxReasonBench is a listener-free benchmark for evidence-grounded speech reasoning. It tests whether a planner can cite permitted dialogue and speech-cue evidence, predict a structured speaking plan, and respond consistently when cue evidence is edited while the target text is held fixed.
+VoxReasonBench is a listener-free source-label diagnostic suite for evidence-grounded speech reasoning. It tests whether a planner can cite permitted dialogue and speech-cue evidence, predict a structured speaking plan, and respond consistently when cue evidence is edited while the target text is held fixed.
 
 ## Intended Use
 
-Use this benchmark to evaluate process supervision for speech planning before running any study with listeners. The benchmark is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
+Use this diagnostic suite to evaluate process supervision for speech planning before running any study with listeners. It is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
 
-Do not use the benchmark to claim waveform quality, listener preference, or production suitability. The released files do not contain waveforms or listener ratings.
+Do not use this suite to claim waveform quality, listener preference, or production suitability. The released files do not contain waveforms or listener ratings.
 
 ## Released Data
 
@@ -50,8 +50,8 @@ python3 scripts/reproduce_results.py
 python3 -m pytest
 ```
 
-The checksum file `data/benchmark/source_label/checksums.sha256` records the released benchmark files checked by `scripts/check_benchmark_files.py`.
+The checksum file `data/benchmark/source_label/checksums.sha256` records the released source-label files checked by `scripts/check_benchmark_files.py`.
 
 ## Known Limits
 
-The benchmark is intentionally narrow. It evaluates evidence-grounded planning behavior, not synthesized waveform quality. It also uses a compact public split, so model comparisons should be reported as diagnostic evidence rather than broad claims about all speech-generation settings.
+The diagnostic suite is intentionally narrow. It evaluates evidence-grounded planning behavior, not synthesized waveform quality. It also uses a compact public split, so model comparisons should be reported as diagnostic evidence rather than broad claims about all speech-generation settings.

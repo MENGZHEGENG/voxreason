@@ -1,10 +1,10 @@
 # VoxReason
 
-VoxReason is a public code and paper package for evidence-grounded speech reasoning. The included paper defines VoxReasonBench, a listener-free diagnostic benchmark for process supervision: the model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
+VoxReason is a public code and paper package for evidence-grounded speech reasoning. The included paper defines a listener-free source-label diagnostic suite for process supervision: the model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
 
 ## What This Release Contains
 
-- `paper/main.tex`: paper source describing the method and benchmark.
+- `paper/main.tex`: paper source describing the method and source-label diagnostic suite.
 - `BENCHMARK.md`: benchmark card with scope, split, metric, and source-data details.
 - `CITATION.cff` and `DATA_USE.md`: citation and data-use notes for the code and benchmark.
 - `LICENSE`: code and documentation license; benchmark records remain subject to `DATA_USE.md`.
@@ -31,9 +31,9 @@ python3 scripts/build_anonymous_review_package.py
 
 The package is written to `dist/voxreason-anonymous-review.zip`. It includes the tracked public files, omits Git history and regenerated outputs, and redacts the repository URL from `CITATION.cff` while keeping author metadata anonymous.
 
-## Benchmark Scope
+## Diagnostic Scope
 
-VoxReasonBench evaluates whether a speech-reasoning planner grounds each delivery decision in permitted source evidence. It is not a waveform-quality benchmark and does not report listener judgments.
+VoxReason evaluates whether a speech-reasoning planner grounds each delivery decision in permitted source evidence. The current release is a narrow source-label diagnostic suite, not a broad waveform-quality benchmark, and it does not report listener judgments.
 
 ## Quick Start
 
@@ -79,7 +79,7 @@ If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on
 
 The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
 
-The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, and `15/15` deterministic source emotion/intensity mappings. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. It also writes `data/results/source_label_acoustic_anchor.json`, where strong-intensity labels have higher RMS than normal labels and raised-pitch plan labels have higher rough pitch than lowered-pitch labels. Treat learned-model rows as diagnostics, not broad benchmark rankings.
+The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, and `15/15` deterministic source emotion/intensity mappings. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. It also writes `data/results/source_label_acoustic_anchor.json`, where strong-intensity labels have higher RMS than normal labels and raised-pitch plan labels have higher rough pitch than lowered-pitch labels. Treat learned-model rows as diagnostics, not broad speech-benchmark or learned-model ordering claims.
 
 ## Main Reproduction Commands
 
