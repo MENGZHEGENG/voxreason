@@ -31,9 +31,9 @@ def tex_row(values: list[str]) -> str:
 
 def write_model_table(rows: list[dict[str, object]], path: Path) -> None:
     lines = [
-        r"\begin{tabular}{lrrrr}",
+        r"\begin{tabular}{lrrrrr}",
         r"\toprule",
-        tex_row(["Model", "Evidence F1", "Plan acc.", "Grounded", "Halluc. rate"]),
+        tex_row(["Model", "Evidence F1", "Plan acc.", "Grounded", "Citation req.", "Halluc. rate"]),
         r"\midrule",
     ]
     order = ["Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"]
@@ -47,6 +47,7 @@ def write_model_table(rows: list[dict[str, object]], path: Path) -> None:
                     fmt(float(row["evidence_f1_mean"])),
                     fmt(float(row["plan_slot_accuracy_mean"])),
                     fmt(float(row["grounded_score_mean"])),
+                    fmt(float(row["citation_required_grounded_score_mean"])),
                     fmt(float(row["hallucinated_evidence_rate_mean"])),
                 ]
             )
@@ -62,6 +63,7 @@ def write_source_label_table(summary: dict[str, object], path: Path) -> None:
         "decisive_cue_recall": "Decisive cue",
         "plan_slot_accuracy": "Plan acc.",
         "grounded_score": "Grounded",
+        "citation_required_grounded_score": "Citation req.",
         "hallucinated_evidence_rate": "Halluc. rate",
         "uncited_evidence_rate": "Uncited rate",
     }

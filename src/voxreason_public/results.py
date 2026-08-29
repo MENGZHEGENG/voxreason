@@ -15,6 +15,7 @@ METRICS = (
     "evidence_f1",
     "plan_slot_accuracy",
     "grounded_score",
+    "citation_required_grounded_score",
     "hallucinated_evidence_rate",
 )
 
@@ -48,6 +49,15 @@ def read_json(path: Path) -> dict:
         return json.load(handle)
 
 
+def _metric_value(payload: dict, metric: str) -> float:
+    if metric in payload:
+        return float(payload[metric])
+    if metric == "citation_required_grounded_score":
+        grounded = float(payload.get("grounded_score", 0.0))
+        return grounded if float(payload.get("evidence_recall", 0.0)) > 0.0 else 0.0
+    return 0.0
+
+
 def read_jsonl(path: Path) -> list[dict]:
     rows: list[dict] = []
     with path.open("r", encoding="utf-8") as handle:
@@ -69,7 +79,7 @@ def load_model_runs(root: Path) -> list[ModelRun]:
             ModelRun(
                 group=MODEL_LABELS[job_id],
                 seed=path.parent.parent.name,
-                metrics={metric: float(payload[metric]) for metric in METRICS},
+                metrics={metric: _metric_value(payload, metric) for metric in METRICS},
                 predictions=int(payload.get("num_predictions", 0)),
                 missing_predictions=int(payload.get("missing_predictions", 0)),
             )
@@ -466,6 +476,7 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
         "key_coverage": seen_keys / denominator,
         "exact_plan_accuracy": exact_matches / denominator,
         "plan_slot_accuracy": mean(slot_scores) if slot_scores else 0.0,
+        "citation_required_grounded_score": 0.0,
         "counterfactual_edits": len(cf_consistency_scores),
         "counterfactual_expected_change_accuracy": mean(cf_expected_scores) if cf_expected_scores else 0.0,
         "counterfactual_unexpected_change_rate": mean(cf_unexpected_scores) if cf_unexpected_scores else 0.0,

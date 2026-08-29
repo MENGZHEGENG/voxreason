@@ -4,7 +4,7 @@ VoxReasonBench is a listener-free source-label diagnostic suite for evidence-gro
 
 ## Intended Use
 
-Use this diagnostic suite to evaluate process supervision for speech planning before running any study with listeners. It is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
+Use this diagnostic suite to evaluate process supervision for speech planning before running any study with listeners. It is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, citation-required grounded score, ungated grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
 
 Do not use this suite to claim waveform quality, listener preference, or production suitability. The released files do not contain waveforms or listener ratings.
 
@@ -28,7 +28,8 @@ Each case contains a case identifier, source information, transcript text, permi
 
 - Evidence F1: overlap between cited evidence identifiers and permitted gold evidence identifiers.
 - Plan-slot accuracy: exact agreement for structured speaking-plan fields.
-- Grounded score: combined evidence and plan score used for listener-free diagnostics.
+- Citation-required grounded score: primary combined score; it is zero when required gold evidence exists but no required evidence is cited.
+- Grounded score: ungated combined evidence and plan score used for diagnostics.
 - Hallucinated-evidence rate: fraction of cited evidence identifiers that are not permitted for the case.
 - Uncited-evidence rate: fraction of required source cues omitted by the prediction.
 - Counterfactual cue consistency: agreement between cue edits and predicted plan changes.

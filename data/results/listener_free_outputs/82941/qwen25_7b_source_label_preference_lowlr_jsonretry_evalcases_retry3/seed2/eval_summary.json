@@ -1,4 +1,5 @@
 {
+  "citation_required_grounded_score": 0.8444852941176471,
   "evidence_f1": 1.0,
   "evidence_precision": 1.0,
   "evidence_recall": 1.0,

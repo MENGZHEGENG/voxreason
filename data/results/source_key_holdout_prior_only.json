@@ -1,6 +1,7 @@
 {
   "ambiguous_prior_keys": 2,
   "baseline_id": "source_key_holdout_source_emotion_prior_only",
+  "citation_required_grounded_score": 0.0,
   "claim_use": "diagnostic only; no case record or citations",
   "counterfactual_consistency_score": 0.0,
   "counterfactual_edits": 24,

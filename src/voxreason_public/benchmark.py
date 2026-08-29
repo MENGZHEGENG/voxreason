@@ -254,6 +254,7 @@ def score_prediction(case: dict[str, Any], prediction: dict[str, Any]) -> dict[s
     uncited_rate = 1.0 - recall if gold_cues else 0.0
     plan_accuracy = plan_slot_accuracy(dict(prediction.get("plan", {})), dict(case.get("gold_plan", {})))
     grounded_score = 0.45 * evidence_f1 + 0.45 * plan_accuracy + 0.10 * (1.0 - hallucinated_rate)
+    citation_required_grounded_score = grounded_score if not gold_cues or recall > 0.0 else 0.0
     return {
         "evidence_precision": precision,
         "evidence_recall": recall,
@@ -263,6 +264,7 @@ def score_prediction(case: dict[str, Any], prediction: dict[str, Any]) -> dict[s
         "hallucinated_evidence_rate": hallucinated_rate,
         "uncited_evidence_rate": uncited_rate,
         "grounded_score": grounded_score,
+        "citation_required_grounded_score": citation_required_grounded_score,
     }
 
 
@@ -277,6 +279,7 @@ def summarize_scores(scores: Iterable[dict[str, float]]) -> dict[str, float]:
         "hallucinated_evidence_rate",
         "uncited_evidence_rate",
         "grounded_score",
+        "citation_required_grounded_score",
     )
     if not score_list:
         return {key: 0.0 for key in metric_keys}

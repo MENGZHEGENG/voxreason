@@ -77,7 +77,7 @@ If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on
 
 ## Claim Boundary
 
-The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
+The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, citation-required grounded score, ungated grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
 
 The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, `15/15` deterministic source emotion/intensity mappings, and `100/100` gold plans covered by the prompt taxonomy. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. The script also writes `data/results/source_key_holdout_prior_only.json`: on the source-key-disjoint split, a source-emotion-only prior reaches exact-plan accuracy `0.667` and plan-slot accuracy `0.958` without the case record or citations, but counterfactual consistency is `0.000`. Treat learned-model rows as diagnostics, not broad speech-benchmark or learned-model ordering claims.
 
@@ -95,8 +95,8 @@ python3 -m pytest
 
 Expected deterministic score highlights from bundled benchmark files:
 
-- Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, grounded score `0.569`, hallucinated-evidence rate `0.000`.
-- Source-label upper bound: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
+- Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, citation-required score `0.569`, hallucinated-evidence rate `0.000`.
+- Source-label upper bound: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, citation-required score `1.000`, hallucinated-evidence rate `0.000`.
 
 For source-label diagnostic rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
 
@@ -104,9 +104,9 @@ The bundled learned-run summaries are included as a lightweight smoke check for 
 
 Bundled smoke-check learned-run summaries:
 
-- Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, grounded score `0.915`, hallucinated-evidence rate `0.000`.
-- Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, grounded score `0.876`, hallucinated-evidence rate `0.000`.
-- Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, grounded score `0.860`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, citation-required score `0.915`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, citation-required score `0.876`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, citation-required score `0.860`, hallucinated-evidence rate `0.000`.
 
 ## Citation
 
