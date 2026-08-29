@@ -20,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the source evidence that governs a speaking plan. We introduce \method, a listener-free diagnostic benchmark for evidence-grounded speech reasoning. A model must cite permitted source cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, counterfactual consistency, and acoustic-anchor checks. On 100 source-label cases, upper-bound reconstruction exposes a text-only gap of 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further show where larger or preference-tuned planners preserve evidence citation while losing plan coverage. \method does not claim listener judgments; instead, it isolates the process-supervision layer that requires verification before human listening studies are meaningful.
+Speech models increasingly expose intermediate reasoning before generating or evaluating spoken responses. Yet this reasoning is often judged only through the final answer, leaving open whether the model used the source evidence that governs a speaking plan. We introduce \method, a listener-free source-label diagnostic for evidence-grounded speech reasoning. A model must cite permitted source cues, predict a structured speaking plan, and remain stable under counterfactual cue edits. The current release includes source-label cases, public-safe automatic metrics, and reproducible code for evidence precision/recall, plan-slot accuracy, hallucinated-evidence rate, grounded score, counterfactual consistency, and acoustic-anchor checks. On 100 source-label cases, upper-bound reconstruction exposes a text-only gap of 14.3 points in evidence F1 and 81.5 points in plan-slot accuracy. Multi-seed model checks further show where larger or process-reward-tuned planners preserve evidence citation while losing plan coverage. \method is not a broad speech benchmark and does not claim listener judgments; instead, it isolates the process-supervision layer that requires verification before human listening studies are meaningful.
 \end{abstract}
 
 \section{Introduction}
@@ -35,7 +35,7 @@ Our contributions are:
     \item a formal process-supervision target for speech reasoning, separating evidence selection, speaking-plan prediction, and counterfactual cue consistency;
     \item a listener-free evaluation protocol with source-label provenance, leakage controls, and automatic metrics tied to concrete claim boundaries;
     \item a reproducible public code release that rebuilds the main numeric results without site-specific job launch files; and
-    \item empirical diagnostics showing that source-label reconstruction exposes a text-only gap while model-scale and preference variants reveal remaining plan-coverage weaknesses.
+    \item empirical diagnostics showing that source-label reconstruction exposes a text-only gap while model-scale and process-reward variants reveal remaining plan-coverage weaknesses.
 \end{itemize}
 
 \section{Related Work}
