@@ -136,8 +136,8 @@ def _bootstrap_ci(positive_values: list[float], negative_values: list[float], *,
     sampler = random.Random(seed)
     deltas: list[float] = []
     for _sample_index in range(samples):
-        positive_sample = [positive_values[sampler.randrange(len(positive_values))] for _ in positive_values]
-        negative_sample = [negative_values[sampler.randrange(len(negative_values))] for _ in negative_values]
+        positive_sample = [positive_values[sampler.randrange(len(positive_values))] for _sample in range(len(positive_values))]
+        negative_sample = [negative_values[sampler.randrange(len(negative_values))] for _sample in range(len(negative_values))]
         deltas.append(mean(positive_sample) - mean(negative_sample))
     deltas.sort()
     return deltas[int(0.025 * (samples - 1))], deltas[int(0.975 * (samples - 1))]
