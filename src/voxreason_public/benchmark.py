@@ -254,7 +254,7 @@ def score_prediction(case: dict[str, Any], prediction: dict[str, Any]) -> dict[s
     uncited_rate = 1.0 - recall if gold_cues else 0.0
     plan_accuracy = plan_slot_accuracy(dict(prediction.get("plan", {})), dict(case.get("gold_plan", {})))
     grounded_score = 0.45 * evidence_f1 + 0.45 * plan_accuracy + 0.10 * (1.0 - hallucinated_rate)
-    citation_required_grounded_score = grounded_score if not gold_cues or recall > 0.0 else 0.0
+    citation_required_grounded_score = grounded_score if not gold_cues else grounded_score * recall
     return {
         "evidence_precision": precision,
         "evidence_recall": recall,

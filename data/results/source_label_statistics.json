@@ -33,6 +33,14 @@
       "upper": 1.0
     },
     {
+      "lower": 1.0,
+      "mean": 1.0,
+      "metric": "citation_required_grounded_score",
+      "samples": 10000,
+      "seed": 20260824,
+      "upper": 1.0
+    },
+    {
       "lower": 0.0,
       "mean": 0.0,
       "metric": "hallucinated_evidence_rate",
@@ -47,14 +55,6 @@
       "samples": 10000,
       "seed": 20260824,
       "upper": 0.0
-    },
-    {
-      "lower": 1.0,
-      "mean": 1.0,
-      "metric": "citation_required_grounded_score",
-      "samples": 10000,
-      "seed": 20260824,
-      "upper": 1.0
     }
   ],
   "cases": 100,
@@ -121,6 +121,21 @@
       "seed": 20260824
     },
     {
+      "baseline_mean": 0.42672321428571425,
+      "candidate_mean": 1.0,
+      "delta_lower": 0.5555580357142857,
+      "delta_mean": 0.5732767857142858,
+      "delta_upper": 0.5893080357142858,
+      "direction": "higher",
+      "improvement_lower": 0.5555580357142857,
+      "improvement_mean": 0.5732767857142858,
+      "improvement_upper": 0.5893080357142858,
+      "metric": "citation_required_grounded_score",
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
+    },
+    {
       "baseline_mean": 0.0,
       "candidate_mean": 0.0,
       "delta_lower": 0.0,
@@ -149,27 +164,12 @@
       "paired_cases": 100,
       "samples": 10000,
       "seed": 20260824
-    },
-    {
-      "baseline_mean": 0.5689642857142857,
-      "candidate_mean": 1.0,
-      "delta_lower": 0.4074107142857143,
-      "delta_mean": 0.43103571428571436,
-      "delta_upper": 0.45241071428571433,
-      "direction": "higher",
-      "improvement_lower": 0.4074107142857143,
-      "improvement_mean": 0.43103571428571436,
-      "improvement_upper": 0.45241071428571433,
-      "metric": "citation_required_grounded_score",
-      "paired_cases": 100,
-      "samples": 10000,
-      "seed": 20260824
     }
   ],
   "systems": [
     {
       "cases": 100,
-      "citation_required_grounded_score": 0.5689642857142857,
+      "citation_required_grounded_score": 0.42672321428571425,
       "decisive_cue_recall": 0.0,
       "evidence_f1": 0.8571428571428571,
       "evidence_precision": 1.0,

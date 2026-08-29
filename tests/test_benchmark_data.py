@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from voxreason_public.benchmark import PLAN_SCHEMA, load_split_cases, score_prediction, validate_cases
 
 
@@ -103,6 +105,33 @@ def test_gold_predictions_score_perfectly() -> None:
     assert all(score["grounded_score"] == 1.0 for score in scores)
     assert all(score["citation_required_grounded_score"] == 1.0 for score in scores)
     assert all(score["uncited_evidence_rate"] == 0.0 for score in scores)
+
+
+def test_citation_required_score_penalizes_partial_recall() -> None:
+    plan = {
+        "emotion": "neutral",
+        "intent": "inform",
+        "pitch": "neutral",
+        "energy": "medium",
+        "rate": "medium",
+        "pause": "none",
+        "stance": "neutral",
+        "emphasis": [],
+    }
+    case = {
+        "case_id": "partial_case",
+        "gold_cues": [
+            {"cue_id": "cue_a", "cue_type": "emotion", "source": "target_text", "label": "neutral", "text": "a"},
+            {"cue_id": "cue_b", "cue_type": "intensity", "source": "target_text", "label": "normal", "text": "b"},
+        ],
+        "gold_plan": plan,
+    }
+    prediction = {"case_id": "partial_case", "cited_cues": [case["gold_cues"][0]], "plan": plan}
+
+    scores = score_prediction(case, prediction)
+
+    assert scores["evidence_recall"] == 0.5
+    assert scores["citation_required_grounded_score"] == pytest.approx(scores["grounded_score"] * 0.5)
 
 
 def test_benchmark_scripts_run() -> None:

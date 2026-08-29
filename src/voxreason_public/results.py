@@ -54,7 +54,7 @@ def _metric_value(payload: dict, metric: str) -> float:
         return float(payload[metric])
     if metric == "citation_required_grounded_score":
         grounded = float(payload.get("grounded_score", 0.0))
-        return grounded if float(payload.get("evidence_recall", 0.0)) > 0.0 else 0.0
+        return grounded * float(payload.get("evidence_recall", 0.0))
     return 0.0
 
 

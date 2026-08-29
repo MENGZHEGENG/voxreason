@@ -67,7 +67,7 @@ python3 -m pytest
 
 Expected deterministic score highlights from bundled benchmark files:
 
-- Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, citation-required score `0.569`, hallucinated-evidence rate `0.000`.
+- Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, citation-required score `0.427`, hallucinated-evidence rate `0.000`.
 - Source-label upper bound: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, citation-required score `1.000`, hallucinated-evidence rate `0.000`.
 
 For source-label diagnostic rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.

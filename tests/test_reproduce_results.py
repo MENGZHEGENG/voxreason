@@ -36,7 +36,7 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert source["source_label_upper_bound"]["uncited_evidence_rate"] == 0.0
     assert source["text_only_control"]["uncited_evidence_rate"] == 0.25
     assert source["source_label_upper_bound"]["citation_required_grounded_score"] == 1.0
-    assert source["text_only_control"]["citation_required_grounded_score"] == source["text_only_control"]["grounded_score"]
+    assert source["text_only_control"]["citation_required_grounded_score"] < source["text_only_control"]["grounded_score"]
     pairwise = {row["metric"]: row for row in source["pairwise"]}
     assert pairwise["decisive_cue_recall"]["delta_mean"] == 1.0
     assert pairwise["uncited_evidence_rate"]["delta_mean"] == -0.25

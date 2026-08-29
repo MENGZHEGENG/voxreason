@@ -33,7 +33,7 @@ Two stricter public split variants are included for anti-shortcut checks:
 
 - Evidence F1: overlap between cited evidence identifiers and permitted gold evidence identifiers.
 - Plan-slot accuracy: exact agreement for structured speaking-plan fields.
-- Citation-required grounded score: primary combined score; it is zero when required gold evidence exists but no required evidence is cited.
+- Citation-required grounded score: primary combined score; it multiplies the grounded score by cited-evidence recall when required gold evidence exists.
 - Grounded score: ungated combined evidence and plan score used for diagnostics.
 - Hallucinated-evidence rate: fraction of cited evidence identifiers that are not permitted for the case.
 - Uncited-evidence rate: fraction of required source cues omitted by the prediction.
