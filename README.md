@@ -1,16 +1,13 @@
 # VoxReason
 
-VoxReason is a public code and paper package for evidence-grounded speech reasoning. The included paper defines a listener-free source-label diagnostic suite for process supervision: the model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
+VoxReason is a public code package for evidence-grounded speech reasoning. It includes the source-label diagnostic data and scripts needed to reproduce the listener-free process checks: a model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
 
 ## What This Release Contains
 
-- `paper/main.tex`: paper source describing the method and source-label diagnostic suite.
 - `BENCHMARK.md`: benchmark card with scope, split, metric, and source-data details.
-- `CITATION.cff` and `DATA_USE.md`: citation and data-use notes for the code and benchmark.
-- `LICENSE`: code and documentation license; benchmark records remain subject to `DATA_USE.md`.
+- `LICENSE`: code and documentation license.
 - `data/benchmark/source_label/`: VoxReasonBench public case splits, prompt files, and gold planner outputs.
 - `scripts/reproduce_results.py`: rebuilds derived result files from compact result inputs.
-- `scripts/build_anonymous_review_package.py`: creates a local anonymous review package when a venue requires anonymous materials.
 - `scripts/build_benchmark_prompts.py`: rebuilds planner prompts from the public benchmark cases.
 - `scripts/build_source_key_holdout_split.py`: rebuilds the source-key-disjoint split for anti-shortcut checks.
 - `scripts/score_predictions.py`: scores model predictions against the public benchmark cases.
@@ -19,17 +16,7 @@ VoxReason is a public code and paper package for evidence-grounded speech reason
 - `data/results/`: compact public result inputs used by the reproduction scripts.
 - `tests/`: reproducibility and public-hygiene checks.
 
-This repository intentionally excludes generated tables, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
-
-## Anonymous Review Package
-
-This hosted repository may identify maintainers through its URL and Git history. For anonymous peer review, do not link the hosted repository directly. Build a local review package instead:
-
-```bash
-python3 scripts/build_anonymous_review_package.py
-```
-
-The package is written to `dist/voxreason-anonymous-review.zip`. It includes the tracked public files, omits Git history and regenerated outputs, and redacts the repository URL from `CITATION.cff` while keeping author metadata anonymous.
+This repository intentionally excludes manuscript source, generated tables, figure files, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
 
 ## Diagnostic Scope
 
@@ -53,27 +40,9 @@ python3 -m pytest
 The generated files are intentionally ignored by Git:
 
 - `outputs/`
-- `paper/tables/*.tex`
 - `data/results/public_summary.json`
 - `data/results/source_label_construct_validity.json`
 - `data/results/source_label_acoustic_anchor.json`
-
-## Build The Paper
-
-Run the reproduction script before compiling, because the LaTeX tables are rebuilt locally and ignored by Git:
-
-```bash
-python3 scripts/reproduce_results.py
-```
-
-Use a standard LaTeX installation from the repository root:
-
-```bash
-cd paper
-latexmk -pdf main.tex
-```
-
-If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on `main.tex` from the `paper` directory.
 
 ## Claim Boundary
 
@@ -100,7 +69,7 @@ Expected deterministic score highlights from bundled benchmark files:
 
 For source-label diagnostic rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
 
-The bundled learned-run summaries are included as a lightweight smoke check for the scorer and table writers. They are not a substitute for rerunning the full multi-seed experiment set used by the manuscript; regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
+The bundled learned-run summaries are included as a lightweight smoke check for the scorer and summary writers. They are not a substitute for rerunning the full multi-seed experiment set used by the paper; regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
 
 Bundled smoke-check learned-run summaries:
 
@@ -110,4 +79,4 @@ Bundled smoke-check learned-run summaries:
 
 ## Citation
 
-If this code helps your work, cite the paper draft in `paper/main.tex` and the repository metadata in `CITATION.cff`. See `DATA_USE.md` for source-data and license notes.
+If this code helps your work, cite the accompanying VoxReason paper and this repository URL.

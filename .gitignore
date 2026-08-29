@@ -1,15 +1,6 @@
 __pycache__/
 .pytest_cache/
 *.pyc
-paper/build/
-paper/figures/*.tex
-paper/tables/*.tex
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.log
-paper/*.out
-paper/*.pdf
 data/results/public_summary.json
 data/results/source_label_construct_validity.json
 data/results/source_label_acoustic_anchor.json

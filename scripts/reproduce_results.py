@@ -25,23 +25,24 @@ def fmt(value: float) -> str:
     return f"{value:.3f}"
 
 
-def tex_row(values: list[str]) -> str:
-    return " & ".join(values) + r" \\"
+def csv_row(values: list[str]) -> str:
+    escaped = []
+    for value in values:
+        text = str(value)
+        if any(char in text for char in [",", '"', "\n"]):
+            text = '"' + text.replace('"', '""') + '"'
+        escaped.append(text)
+    return ",".join(escaped)
 
 
-def write_model_table(rows: list[dict[str, object]], path: Path) -> None:
-    lines = [
-        r"\begin{tabular}{lrrrrr}",
-        r"\toprule",
-        tex_row(["Model", "Evidence F1", "Plan acc.", "Grounded", "Citation req.", "Halluc. rate"]),
-        r"\midrule",
-    ]
+def write_model_csv(rows: list[dict[str, object]], path: Path) -> None:
+    lines = [csv_row(["model", "evidence_f1", "plan_accuracy", "grounded", "citation_required", "hallucinated_rate"])]
     order = ["Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"]
     by_model = {str(row["model"]): row for row in rows}
     for label in order:
         row = by_model[label]
         lines.append(
-            tex_row(
+            csv_row(
                 [
                     label,
                     fmt(float(row["evidence_f1_mean"])),
@@ -52,11 +53,10 @@ def write_model_table(rows: list[dict[str, object]], path: Path) -> None:
                 ]
             )
         )
-    lines.extend([r"\bottomrule", r"\end{tabular}"])
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def write_source_label_table(summary: dict[str, object], path: Path) -> None:
+def write_source_label_csv(summary: dict[str, object], path: Path) -> None:
     pairs = {row["metric"]: row for row in summary["pairwise"]}
     labels = {
         "evidence_f1": "Evidence F1",
@@ -67,16 +67,11 @@ def write_source_label_table(summary: dict[str, object], path: Path) -> None:
         "hallucinated_evidence_rate": "Halluc. rate",
         "uncited_evidence_rate": "Uncited rate",
     }
-    lines = [
-        r"\begin{tabular}{lrrr}",
-        r"\toprule",
-        tex_row(["Metric", "Text control", "Source-label upper bound", r"$\Delta$"]),
-        r"\midrule",
-    ]
+    lines = [csv_row(["metric", "text_control", "source_label_upper_bound", "delta"])]
     for metric, label in labels.items():
         row = pairs[metric]
         lines.append(
-            tex_row(
+            csv_row(
                 [
                     label,
                     fmt(float(row["baseline_mean"])),
@@ -85,11 +80,10 @@ def write_source_label_table(summary: dict[str, object], path: Path) -> None:
                 ]
             )
         )
-    lines.extend([r"\bottomrule", r"\end{tabular}"])
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def write_acoustic_table(summary: dict[str, float | int], path: Path) -> None:
+def write_acoustic_csv(summary: dict[str, float | int], path: Path) -> None:
     rows = [
         ("Cases", int(summary["cases"])),
         ("Feature rows", int(summary["feature_rows"])),
@@ -98,17 +92,16 @@ def write_acoustic_table(summary: dict[str, float | int], path: Path) -> None:
         ("Voiced fraction", float(summary["voiced_fraction_mean"])),
         ("Pitch proxy (Hz)", float(summary["rough_pitch_hz_mean"])),
     ]
-    lines = [r"\begin{tabular}{lr}", r"\toprule", tex_row(["Statistic", "Value"]), r"\midrule"]
+    lines = [csv_row(["statistic", "value"])]
     for label, value in rows:
         rendered = str(value) if isinstance(value, int) else fmt(value)
-        lines.append(tex_row([label, rendered]))
-    lines.extend([r"\bottomrule", r"\end{tabular}"])
+        lines.append(csv_row([label, rendered]))
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main() -> None:
-    tables = ROOT / "paper/tables"
-    tables.mkdir(parents=True, exist_ok=True)
+    outputs = ROOT / "outputs/results"
+    outputs.mkdir(parents=True, exist_ok=True)
     runs = load_model_runs(ROOT)
     model_rows = summarize_model_runs(runs)
     source_label = load_source_label_summary(ROOT)
@@ -116,9 +109,9 @@ def main() -> None:
     acoustic_anchor = summarize_acoustic_anchor(ROOT)
     construct_validity = summarize_construct_validity(ROOT)
     source_key_prior = summarize_source_key_holdout_prior(ROOT)
-    write_model_table(model_rows, tables / "listener_free_model_results.tex")
-    write_source_label_table(source_label, tables / "source_label_upper_bound.tex")
-    write_acoustic_table(acoustic, tables / "acoustic_preflight_summary.tex")
+    write_model_csv(model_rows, outputs / "listener_free_model_results.csv")
+    write_source_label_csv(source_label, outputs / "source_label_upper_bound.csv")
+    write_acoustic_csv(acoustic, outputs / "acoustic_preflight_summary.csv")
     source_by_id = {row["system_id"]: row for row in source_label["systems"]}
     result = {
         "claim_scope": "listener_free_evidence_grounded_speech_reasoning",

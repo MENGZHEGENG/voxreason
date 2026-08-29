@@ -15,9 +15,9 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     subprocess.run([sys.executable, "scripts/reproduce_results.py"], cwd=ROOT, check=True)
 
     expected_paths = [
-        ROOT / "paper/tables/listener_free_model_results.tex",
-        ROOT / "paper/tables/source_label_upper_bound.tex",
-        ROOT / "paper/tables/acoustic_preflight_summary.tex",
+        ROOT / "outputs/results/listener_free_model_results.csv",
+        ROOT / "outputs/results/source_label_upper_bound.csv",
+        ROOT / "outputs/results/acoustic_preflight_summary.csv",
         ROOT / "data/results/public_summary.json",
         ROOT / "data/results/source_label_construct_validity.json",
         ROOT / "data/results/source_key_holdout_prior_only.json",
