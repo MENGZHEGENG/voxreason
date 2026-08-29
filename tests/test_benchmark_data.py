@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from voxreason_public.benchmark import load_split_cases, score_prediction, validate_cases
+from voxreason_public.benchmark import PLAN_SCHEMA, load_split_cases, score_prediction, validate_cases
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +17,23 @@ def test_public_benchmark_cases_are_complete_and_clean() -> None:
 
     assert report["case_count"] == 100
     assert report["issues"] == []
+
+
+def test_public_prompt_taxonomy_covers_released_gold_plans() -> None:
+    prompt_choices = {
+        field: set(str(choices).split("|"))
+        for field, choices in PLAN_SCHEMA["plan"].items()
+        if isinstance(choices, str)
+    }
+    invalid: list[str] = []
+    for case in load_split_cases(ROOT):
+        plan = case["gold_plan"]
+        for field, choices in prompt_choices.items():
+            value = plan[field]
+            if value not in choices:
+                invalid.append(f"{case['case_id']} {field}={value!r}")
+
+    assert invalid == []
 
 
 def test_public_benchmark_splits_match_expected_counts() -> None:

@@ -31,14 +31,14 @@ PLAN_SCHEMA = {
         }
     ],
     "plan": {
-        "emotion": "neutral|happy|sad|angry|afraid|tender|surprised|disgusted",
-        "intent": "inform|ask|warn|reassure|apologize|persuade|tease|express-emotion",
+        "emotion": "neutral|calm|happy|sad|angry|afraid|fearful|tender|surprised|disgusted",
+        "intent": "inform|ask|warn|reassure|apologize|persuade|tease|express-emotion|confront|console|encourage|react|reject|seek_reassurance",
         "pitch": "lowered|neutral|raised|variable",
         "energy": "low|medium|high",
         "rate": "slow|medium|fast",
-        "pause": "none|short|long",
+        "pause": "none|short|medium|long",
         "emphasis": ["word or phrase"],
-        "stance": "neutral|supportive|confrontational|playful|deferential|authoritative",
+        "stance": "neutral|supportive|confrontational|playful|deferential|authoritative|alert|assertive|distant|positive|uncertain|vulnerable",
     },
 }
 

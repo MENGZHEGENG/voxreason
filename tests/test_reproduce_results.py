@@ -6,6 +6,8 @@ import re
 import subprocess
 import sys
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -56,6 +58,8 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["prior_only_test_keys_seen_in_train"] == 16
     assert construct["prior_only_exact_plan_accuracy"] == 0.625
     assert construct["prior_only_plan_slot_accuracy"] == 0.953125
+    assert construct["prior_only_counterfactual_edits"] == 16
+    assert construct["prior_only_counterfactual_consistency_score"] == pytest.approx(0.2)
     source_key_prior = source["source_key_holdout_prior_only"]
     assert source_key_prior["scope"] == "source_key_disjoint_split_diagnostic"
     assert source_key_prior["train_cases"] == 60
@@ -63,6 +67,8 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert source_key_prior["test_keys_seen_in_train"] == 24
     assert source_key_prior["exact_plan_accuracy"] == 2 / 3
     assert source_key_prior["plan_slot_accuracy"] == 0.9583333333333334
+    assert source_key_prior["counterfactual_edits"] == 24
+    assert source_key_prior["counterfactual_consistency_score"] == 0.0
     acoustic_anchor = source["acoustic_anchor"]
     assert acoustic_anchor["anchor_ready"] is True
     assert acoustic_anchor["matched_cases"] == 100

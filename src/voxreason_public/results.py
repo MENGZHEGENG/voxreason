@@ -8,7 +8,7 @@ from statistics import mean, pstdev
 from collections import Counter, defaultdict
 from typing import Iterable
 
-from voxreason_public.benchmark import PLAN_FIELDS, load_split_cases, plan_slot_accuracy
+from voxreason_public.benchmark import ALL_PLAN_FIELDS, PLAN_FIELDS, load_split_cases, normalize_label, plan_slot_accuracy
 
 
 METRICS = (
@@ -239,6 +239,32 @@ def _majority_plan(cases: list[dict[str, object]]) -> dict[str, object]:
     return dict(json.loads(counts.most_common(1)[0][0])) if counts else {}
 
 
+def _plan_value(plan: dict[str, object], slot: str) -> object:
+    return plan.get(slot, ()) if slot == "emphasis" else plan.get(slot, "")
+
+
+def _values_equal(left: object, right: object) -> bool:
+    if isinstance(left, list) or isinstance(right, list):
+        left_items = left if isinstance(left, list) else [left]
+        right_items = right if isinstance(right, list) else [right]
+        return {normalize_label(item) for item in left_items} == {normalize_label(item) for item in right_items}
+    return normalize_label(left) == normalize_label(right)
+
+
+def _changed_plan_slots(before: dict[str, object], after: dict[str, object]) -> set[str]:
+    return {field for field in ALL_PLAN_FIELDS if not _values_equal(_plan_value(before, field), _plan_value(after, field))}
+
+
+def _counterfactual_score(original_plan: dict[str, object], counterfactual_plan: dict[str, object], expected_delta: dict[str, object]) -> tuple[float, float, float]:
+    expected_slots = set(expected_delta)
+    observed_changes = _changed_plan_slots(original_plan, counterfactual_plan)
+    expected_hits = sum(1 for slot, expected in expected_delta.items() if _values_equal(_plan_value(counterfactual_plan, slot), expected))
+    expected_change_accuracy = expected_hits / len(expected_slots) if expected_slots else 1.0
+    stable_slots = set(ALL_PLAN_FIELDS) - expected_slots
+    unexpected_change_rate = len(observed_changes - expected_slots) / len(stable_slots) if stable_slots else 0.0
+    return expected_change_accuracy, unexpected_change_rate, max(0.0, expected_change_accuracy * (1.0 - unexpected_change_rate))
+
+
 def summarize_construct_validity(root: Path) -> dict[str, object]:
     train_cases = load_split_cases(root, "train")
     test_cases = load_split_cases(root, "test")
@@ -270,6 +296,9 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     prior_exact_matches = 0
     prior_seen_keys = 0
     prior_slot_scores: list[float] = []
+    prior_cf_expected_scores: list[float] = []
+    prior_cf_unexpected_scores: list[float] = []
+    prior_cf_consistency_scores: list[float] = []
     heldout_keys: set[tuple[str, str]] = set()
     for case in test_cases:
         key = _source_key(case)
@@ -287,6 +316,18 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         prior_prediction = prior_lookup.get(emotion, fallback)
         prior_exact_matches += int(_plan_signature(prior_prediction) == _plan_signature(gold_plan))
         prior_slot_scores.append(plan_slot_accuracy(prior_prediction, gold_plan))
+        for counterfactual in case.get("counterfactuals", []):
+            if not isinstance(counterfactual, dict):
+                continue
+            expected_delta = counterfactual.get("expected_plan_delta", {})
+            if not isinstance(expected_delta, dict):
+                continue
+            counterfactual_emotion = normalize_label(expected_delta.get("emotion", emotion))
+            counterfactual_prediction = prior_lookup.get(counterfactual_emotion, fallback)
+            expected_score, unexpected_rate, consistency = _counterfactual_score(prior_prediction, counterfactual_prediction, expected_delta)
+            prior_cf_expected_scores.append(expected_score)
+            prior_cf_unexpected_scores.append(unexpected_rate)
+            prior_cf_consistency_scores.append(consistency)
 
         reduced_train = [row for row in train_cases if _source_key(row) != key]
         reduced_grouped: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
@@ -343,6 +384,10 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "prior_only_test_keys_seen_in_train": prior_seen_keys,
         "prior_only_exact_plan_accuracy": prior_exact_matches / denominator,
         "prior_only_plan_slot_accuracy": mean(prior_slot_scores) if prior_slot_scores else 0.0,
+        "prior_only_counterfactual_edits": len(prior_cf_consistency_scores),
+        "prior_only_counterfactual_expected_change_accuracy": mean(prior_cf_expected_scores) if prior_cf_expected_scores else 0.0,
+        "prior_only_counterfactual_unexpected_change_rate": mean(prior_cf_unexpected_scores) if prior_cf_unexpected_scores else 0.0,
+        "prior_only_counterfactual_consistency_score": mean(prior_cf_consistency_scores) if prior_cf_consistency_scores else 0.0,
         "plan_fields": list(PLAN_FIELDS) + ["emphasis"],
     }
 
@@ -364,6 +409,9 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
     exact_matches = 0
     seen_keys = 0
     slot_scores: list[float] = []
+    cf_expected_scores: list[float] = []
+    cf_unexpected_scores: list[float] = []
+    cf_consistency_scores: list[float] = []
     for case in test_cases:
         emotion = _source_key(case)[0]
         if emotion in lookup:
@@ -372,6 +420,18 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
         gold_plan = dict(case.get("gold_plan", {}))
         exact_matches += int(_plan_signature(prediction) == _plan_signature(gold_plan))
         slot_scores.append(plan_slot_accuracy(prediction, gold_plan))
+        for counterfactual in case.get("counterfactuals", []):
+            if not isinstance(counterfactual, dict):
+                continue
+            expected_delta = counterfactual.get("expected_plan_delta", {})
+            if not isinstance(expected_delta, dict):
+                continue
+            counterfactual_emotion = normalize_label(expected_delta.get("emotion", emotion))
+            counterfactual_prediction = lookup.get(counterfactual_emotion, fallback)
+            expected_score, unexpected_rate, consistency = _counterfactual_score(prediction, counterfactual_prediction, expected_delta)
+            cf_expected_scores.append(expected_score)
+            cf_unexpected_scores.append(unexpected_rate)
+            cf_consistency_scores.append(consistency)
     denominator = len(test_cases) or 1
     return {
         "baseline_id": "source_key_holdout_source_emotion_prior_only",
@@ -385,5 +445,9 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
         "key_coverage": seen_keys / denominator,
         "exact_plan_accuracy": exact_matches / denominator,
         "plan_slot_accuracy": mean(slot_scores) if slot_scores else 0.0,
+        "counterfactual_edits": len(cf_consistency_scores),
+        "counterfactual_expected_change_accuracy": mean(cf_expected_scores) if cf_expected_scores else 0.0,
+        "counterfactual_unexpected_change_rate": mean(cf_unexpected_scores) if cf_unexpected_scores else 0.0,
+        "counterfactual_consistency_score": mean(cf_consistency_scores) if cf_consistency_scores else 0.0,
         "claim_use": "diagnostic only; no case record or citations",
     }
