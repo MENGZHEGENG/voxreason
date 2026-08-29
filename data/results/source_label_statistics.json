@@ -5,6 +5,15 @@
       "mean": 1.0,
       "metric": "evidence_f1",
       "samples": 10000,
+      "seed": 20260824,
+      "upper": 1.0
+    },
+    {
+      "lower": 1.0,
+      "mean": 1.0,
+      "metric": "decisive_cue_recall",
+      "samples": 10000,
+      "seed": 20260824,
       "upper": 1.0
     },
     {
@@ -12,6 +21,7 @@
       "mean": 1.0,
       "metric": "plan_slot_accuracy",
       "samples": 10000,
+      "seed": 20260824,
       "upper": 1.0
     },
     {
@@ -19,6 +29,7 @@
       "mean": 1.0,
       "metric": "grounded_score",
       "samples": 10000,
+      "seed": 20260824,
       "upper": 1.0
     },
     {
@@ -26,6 +37,7 @@
       "mean": 0.0,
       "metric": "hallucinated_evidence_rate",
       "samples": 10000,
+      "seed": 20260824,
       "upper": 0.0
     },
     {
@@ -33,6 +45,7 @@
       "mean": 0.0,
       "metric": "uncited_evidence_rate",
       "samples": 10000,
+      "seed": 20260824,
       "upper": 0.0
     }
   ],
@@ -42,57 +55,118 @@
     {
       "baseline_mean": 0.8571428571428571,
       "candidate_mean": 1.0,
+      "delta_lower": 0.1428571428571429,
       "delta_mean": 0.1428571428571429,
+      "delta_upper": 0.1428571428571429,
+      "direction": "higher",
+      "improvement_lower": 0.1428571428571429,
+      "improvement_mean": 0.1428571428571429,
+      "improvement_upper": 0.1428571428571429,
       "metric": "evidence_f1",
-      "paired_cases": 100
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
+    },
+    {
+      "baseline_mean": 0.0,
+      "candidate_mean": 1.0,
+      "delta_lower": 1.0,
+      "delta_mean": 1.0,
+      "delta_upper": 1.0,
+      "direction": "higher",
+      "improvement_lower": 1.0,
+      "improvement_mean": 1.0,
+      "improvement_upper": 1.0,
+      "metric": "decisive_cue_recall",
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
     },
     {
       "baseline_mean": 0.185,
       "candidate_mean": 1.0,
+      "delta_lower": 0.7625,
       "delta_mean": 0.815,
+      "delta_upper": 0.8625,
+      "direction": "higher",
+      "improvement_lower": 0.7625,
+      "improvement_mean": 0.815,
+      "improvement_upper": 0.8625,
       "metric": "plan_slot_accuracy",
-      "paired_cases": 100
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
     },
     {
       "baseline_mean": 0.5689642857142857,
       "candidate_mean": 1.0,
+      "delta_lower": 0.4074107142857143,
       "delta_mean": 0.43103571428571436,
+      "delta_upper": 0.45241071428571433,
+      "direction": "higher",
+      "improvement_lower": 0.4074107142857143,
+      "improvement_mean": 0.43103571428571436,
+      "improvement_upper": 0.45241071428571433,
       "metric": "grounded_score",
-      "paired_cases": 100
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
     },
     {
       "baseline_mean": 0.0,
       "candidate_mean": 0.0,
+      "delta_lower": 0.0,
       "delta_mean": 0.0,
+      "delta_upper": 0.0,
+      "direction": "lower",
+      "improvement_lower": 0.0,
+      "improvement_mean": 0.0,
+      "improvement_upper": 0.0,
       "metric": "hallucinated_evidence_rate",
-      "paired_cases": 100
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
     },
     {
       "baseline_mean": 0.25,
       "candidate_mean": 0.0,
+      "delta_lower": -0.25,
       "delta_mean": -0.25,
+      "delta_upper": -0.25,
+      "direction": "lower",
+      "improvement_lower": 0.25,
+      "improvement_mean": 0.25,
+      "improvement_upper": 0.25,
       "metric": "uncited_evidence_rate",
-      "paired_cases": 100
+      "paired_cases": 100,
+      "samples": 10000,
+      "seed": 20260824
     }
   ],
   "systems": [
     {
       "cases": 100,
+      "decisive_cue_recall": 0.0,
       "evidence_f1": 0.8571428571428571,
+      "evidence_precision": 1.0,
+      "evidence_recall": 0.75,
       "grounded_score": 0.5689642857142857,
       "hallucinated_evidence_rate": 0.0,
       "plan_slot_accuracy": 0.185,
-      "uncited_evidence_rate": 0.25,
-      "system_id": "text_neutral_control"
+      "system_id": "text_neutral_control",
+      "uncited_evidence_rate": 0.25
     },
     {
       "cases": 100,
+      "decisive_cue_recall": 1.0,
       "evidence_f1": 1.0,
+      "evidence_precision": 1.0,
+      "evidence_recall": 1.0,
       "grounded_score": 1.0,
       "hallucinated_evidence_rate": 0.0,
       "plan_slot_accuracy": 1.0,
-      "uncited_evidence_rate": 0.0,
-      "system_id": "source_label_evidence_planner"
+      "system_id": "source_label_evidence_planner",
+      "uncited_evidence_rate": 0.0
     }
   ]
 }

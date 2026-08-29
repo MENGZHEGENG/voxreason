@@ -28,9 +28,12 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert source["num_cases"] == 100
     assert source["source_label_upper_bound"]["plan_slot_accuracy"] == 1.0
     assert source["text_only_control"]["plan_slot_accuracy"] == 0.185
+    assert source["source_label_upper_bound"]["decisive_cue_recall"] == 1.0
+    assert source["text_only_control"]["decisive_cue_recall"] == 0.0
     assert source["source_label_upper_bound"]["uncited_evidence_rate"] == 0.0
     assert source["text_only_control"]["uncited_evidence_rate"] == 0.25
     pairwise = {row["metric"]: row for row in source["pairwise"]}
+    assert pairwise["decisive_cue_recall"]["delta_mean"] == 1.0
     assert pairwise["uncited_evidence_rate"]["delta_mean"] == -0.25
     construct = source["construct_validity"]
     assert construct["broad_benchmark_ready"] is False
@@ -72,6 +75,7 @@ def test_readme_score_highlights_match_reproduced_summary() -> None:
 
     pattern = re.compile(
         r"^- (?P<label>[^:]+): evidence F1 `(?P<evidence>\d+\.\d{3})`, "
+        r"(?:decisive-cue recall `(?P<decisive>\d+\.\d{3})`, )?"
         r"plan accuracy `(?P<plan>\d+\.\d{3})`, grounded score `(?P<grounded>\d+\.\d{3})`, "
         r"hallucinated-evidence rate `(?P<hallucinated>\d+\.\d{3})`\.",
         re.MULTILINE,
@@ -81,6 +85,10 @@ def test_readme_score_highlights_match_reproduced_summary() -> None:
     assert set(found) == set(expected)
     for label, row in expected.items():
         assert found[label]["evidence"] == f"{float(row['evidence_f1'] if 'evidence_f1' in row else row['evidence_f1_mean']):.3f}"
+        if "decisive_cue_recall" in row:
+            assert found[label]["decisive"] == f"{float(row['decisive_cue_recall']):.3f}"
+        else:
+            assert found[label]["decisive"] is None
         assert found[label]["plan"] == f"{float(row['plan_slot_accuracy'] if 'plan_slot_accuracy' in row else row['plan_slot_accuracy_mean']):.3f}"
         assert found[label]["grounded"] == f"{float(row['grounded_score'] if 'grounded_score' in row else row['grounded_score_mean']):.3f}"
         assert found[label]["hallucinated"] == f"{float(row['hallucinated_evidence_rate'] if 'hallucinated_evidence_rate' in row else row['hallucinated_evidence_rate_mean']):.3f}"

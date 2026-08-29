@@ -36,6 +36,7 @@ def test_gold_predictions_score_perfectly() -> None:
     scores = [score_prediction(cases[row["case_id"]], row) for row in gold_rows]
     assert len(scores) == 16
     assert all(score["evidence_f1"] == 1.0 for score in scores)
+    assert all(score["decisive_cue_recall"] == 1.0 for score in scores)
     assert all(score["plan_slot_accuracy"] == 1.0 for score in scores)
     assert all(score["grounded_score"] == 1.0 for score in scores)
     assert all(score["uncited_evidence_rate"] == 0.0 for score in scores)

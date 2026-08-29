@@ -75,7 +75,7 @@ If `latexmk` is unavailable, run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on
 
 ## Claim Boundary
 
-The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, plan-slot accuracy, grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
+The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
 
 The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, and a source emotion/intensity lookup with test exact-plan accuracy `1.000`. The same file reports a leave-key-out stress where exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. It also writes `data/results/source_label_acoustic_anchor.json`, where strong-intensity labels have higher RMS than normal labels and raised-pitch plan labels have higher rough pitch than lowered-pitch labels. Treat learned-model rows as diagnostics, not broad benchmark rankings.
 
@@ -92,8 +92,8 @@ python3 -m pytest
 
 Expected deterministic score highlights from bundled benchmark files:
 
-- Text-only control: evidence F1 `0.857`, plan accuracy `0.185`, grounded score `0.569`, hallucinated-evidence rate `0.000`.
-- Source-label upper bound: evidence F1 `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
+- Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, grounded score `0.569`, hallucinated-evidence rate `0.000`.
+- Source-label upper bound: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, grounded score `1.000`, hallucinated-evidence rate `0.000`.
 
 For source-label diagnostic rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
 

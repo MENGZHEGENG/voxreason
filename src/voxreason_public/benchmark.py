@@ -213,6 +213,26 @@ def count_cue_matches(predicted_cues: Iterable[dict[str, Any]], gold_cues: Itera
     return matches
 
 
+def decisive_cue_recall(case: dict[str, Any], predicted_cues: Iterable[dict[str, Any]]) -> float:
+    changed_ids = {
+        str(edit.get("changed_cue_id", ""))
+        for edit in case.get("counterfactuals", [])
+        if isinstance(edit, dict) and str(edit.get("changed_cue_id", ""))
+    }
+    decisive = [cue for cue in case.get("gold_cues", []) if str(cue.get("cue_id", "")) in changed_ids]
+    if not decisive:
+        return 0.0
+    predicted = list(predicted_cues)
+    predicted_ids = {str(cue.get("cue_id", "")) for cue in predicted if str(cue.get("cue_id", ""))}
+    predicted_keys = {cue_key(cue) for cue in predicted}
+    recovered = sum(
+        1
+        for cue in decisive
+        if str(cue.get("cue_id", "")) in predicted_ids or cue_key(cue) in predicted_keys
+    )
+    return recovered / len(decisive)
+
+
 def plan_slot_accuracy(predicted: dict[str, Any], gold: dict[str, Any]) -> float:
     scalar_correct = sum(normalize_label(predicted.get(field)) == normalize_label(gold.get(field)) for field in PLAN_FIELDS)
     pred_emphasis = {normalize_label(item) for item in predicted.get("emphasis", [])}
@@ -238,6 +258,7 @@ def score_prediction(case: dict[str, Any], prediction: dict[str, Any]) -> dict[s
         "evidence_precision": precision,
         "evidence_recall": recall,
         "evidence_f1": evidence_f1,
+        "decisive_cue_recall": decisive_cue_recall(case, predicted_cues),
         "plan_slot_accuracy": plan_accuracy,
         "hallucinated_evidence_rate": hallucinated_rate,
         "uncited_evidence_rate": uncited_rate,
@@ -251,6 +272,7 @@ def summarize_scores(scores: Iterable[dict[str, float]]) -> dict[str, float]:
         "evidence_precision",
         "evidence_recall",
         "evidence_f1",
+        "decisive_cue_recall",
         "plan_slot_accuracy",
         "hallucinated_evidence_rate",
         "uncited_evidence_rate",

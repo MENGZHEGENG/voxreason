@@ -58,6 +58,7 @@ def write_source_label_table(summary: dict[str, object], path: Path) -> None:
     pairs = {row["metric"]: row for row in summary["pairwise"]}
     labels = {
         "evidence_f1": "Evidence F1",
+        "decisive_cue_recall": "Decisive cue",
         "plan_slot_accuracy": "Plan acc.",
         "grounded_score": "Grounded",
         "hallucinated_evidence_rate": "Halluc. rate",
