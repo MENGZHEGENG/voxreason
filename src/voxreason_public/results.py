@@ -256,14 +256,31 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     exact_matches = 0
     seen_keys = 0
     slot_scores: list[float] = []
+    key_holdout_exact_matches = 0
+    key_holdout_slot_scores: list[float] = []
+    heldout_keys: set[tuple[str, str]] = set()
     for case in test_cases:
         key = _source_key(case)
+        heldout_keys.add(key)
         if key in lookup:
             seen_keys += 1
         prediction = lookup.get(key, fallback)
         gold_plan = dict(case.get("gold_plan", {}))
         exact_matches += int(_plan_signature(prediction) == _plan_signature(gold_plan))
         slot_scores.append(plan_slot_accuracy(prediction, gold_plan))
+
+        reduced_train = [row for row in train_cases if _source_key(row) != key]
+        reduced_grouped: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
+        for train_case in reduced_train:
+            reduced_grouped[_source_key(train_case)][_plan_signature(dict(train_case.get("gold_plan", {})))] += 1
+        reduced_lookup = {
+            reduced_key: dict(json.loads(sorted(counter.items(), key=lambda item: (-item[1], item[0]))[0][0]))
+            for reduced_key, counter in reduced_grouped.items()
+        }
+        reduced_fallback = _majority_plan(reduced_train or train_cases)
+        key_holdout_prediction = reduced_lookup.get(key, reduced_fallback)
+        key_holdout_exact_matches += int(_plan_signature(key_holdout_prediction) == _plan_signature(gold_plan))
+        key_holdout_slot_scores.append(plan_slot_accuracy(key_holdout_prediction, gold_plan))
 
     denominator = len(test_cases) or 1
     scenes = {_cue_label(case, "scene_state") for case in all_cases if _cue_label(case, "scene_state")}
@@ -286,5 +303,9 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "test_keys_seen_in_train": seen_keys,
         "lookup_exact_plan_accuracy": exact_matches / denominator,
         "lookup_plan_slot_accuracy": mean(slot_scores) if slot_scores else 0.0,
+        "leave_key_out_test_cases": len(test_cases),
+        "leave_key_out_heldout_keys": len(heldout_keys),
+        "leave_key_out_exact_plan_accuracy": key_holdout_exact_matches / denominator,
+        "leave_key_out_plan_slot_accuracy": mean(key_holdout_slot_scores) if key_holdout_slot_scores else 0.0,
         "plan_fields": list(PLAN_FIELDS) + ["emphasis"],
     }
