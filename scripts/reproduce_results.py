@@ -17,6 +17,7 @@ from voxreason_public.results import (  # noqa: E402
     summarize_acoustic_rows,
     summarize_construct_validity,
     summarize_model_runs,
+    summarize_source_key_holdout_prior,
 )
 
 
@@ -112,6 +113,7 @@ def main() -> None:
     acoustic = summarize_acoustic_rows(ROOT)
     acoustic_anchor = summarize_acoustic_anchor(ROOT)
     construct_validity = summarize_construct_validity(ROOT)
+    source_key_prior = summarize_source_key_holdout_prior(ROOT)
     write_model_table(model_rows, tables / "listener_free_model_results.tex")
     write_source_label_table(source_label, tables / "source_label_upper_bound.tex")
     write_acoustic_table(acoustic, tables / "acoustic_preflight_summary.tex")
@@ -125,6 +127,7 @@ def main() -> None:
             "text_only_control": source_by_id["text_neutral_control"],
             "source_label_upper_bound": source_by_id["source_label_evidence_planner"],
             "construct_validity": construct_validity,
+            "source_key_holdout_prior_only": source_key_prior,
             "acoustic_anchor": acoustic_anchor,
             "pairwise": source_label["pairwise"],
         },
@@ -135,6 +138,8 @@ def main() -> None:
     out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     construct_out = ROOT / "data/results/source_label_construct_validity.json"
     construct_out.write_text(json.dumps(construct_validity, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    source_key_prior_out = ROOT / "data/results/source_key_holdout_prior_only.json"
+    source_key_prior_out.write_text(json.dumps(source_key_prior, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     anchor_out = ROOT / "data/results/source_label_acoustic_anchor.json"
     anchor_out.write_text(json.dumps(acoustic_anchor, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2, sort_keys=True))

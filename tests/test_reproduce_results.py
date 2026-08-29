@@ -18,6 +18,7 @@ def test_reproduce_results_generates_expected_outputs() -> None:
         ROOT / "paper/tables/acoustic_preflight_summary.tex",
         ROOT / "data/results/public_summary.json",
         ROOT / "data/results/source_label_construct_validity.json",
+        ROOT / "data/results/source_key_holdout_prior_only.json",
         ROOT / "data/results/source_label_acoustic_anchor.json",
     ]
     for path in expected_paths:
@@ -55,6 +56,13 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["prior_only_test_keys_seen_in_train"] == 16
     assert construct["prior_only_exact_plan_accuracy"] == 0.625
     assert construct["prior_only_plan_slot_accuracy"] == 0.953125
+    source_key_prior = source["source_key_holdout_prior_only"]
+    assert source_key_prior["scope"] == "source_key_disjoint_split_diagnostic"
+    assert source_key_prior["train_cases"] == 60
+    assert source_key_prior["test_cases"] == 24
+    assert source_key_prior["test_keys_seen_in_train"] == 24
+    assert source_key_prior["exact_plan_accuracy"] == 2 / 3
+    assert source_key_prior["plan_slot_accuracy"] == 0.9583333333333334
     acoustic_anchor = source["acoustic_anchor"]
     assert acoustic_anchor["anchor_ready"] is True
     assert acoustic_anchor["matched_cases"] == 100

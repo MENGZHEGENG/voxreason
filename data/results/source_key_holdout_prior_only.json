@@ -1,0 +1,14 @@
+{
+  "ambiguous_prior_keys": 2,
+  "baseline_id": "source_key_holdout_source_emotion_prior_only",
+  "claim_use": "diagnostic only; no case record or citations",
+  "exact_plan_accuracy": 0.6666666666666666,
+  "key_coverage": 1.0,
+  "plan_slot_accuracy": 0.9583333333333334,
+  "prior_field": "source_emotion",
+  "scope": "source_key_disjoint_split_diagnostic",
+  "test_cases": 24,
+  "test_keys_seen_in_train": 24,
+  "train_cases": 60,
+  "train_prior_keys": 7
+}

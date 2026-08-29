@@ -345,3 +345,45 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "prior_only_plan_slot_accuracy": mean(prior_slot_scores) if prior_slot_scores else 0.0,
         "plan_fields": list(PLAN_FIELDS) + ["emphasis"],
     }
+
+
+def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
+    split_root = root / "data/benchmark/source_label/source_key_holdout/splits"
+    train_cases = read_jsonl(split_root / "train_cases_public.jsonl")
+    test_cases = read_jsonl(split_root / "test_cases_public.jsonl")
+    grouped: dict[str, Counter[str]] = defaultdict(Counter)
+    for case in train_cases:
+        emotion = _source_key(case)[0]
+        if emotion:
+            grouped[emotion][_plan_signature(dict(case.get("gold_plan", {})))] += 1
+    lookup = {
+        emotion: dict(json.loads(sorted(counter.items(), key=lambda item: (-item[1], item[0]))[0][0]))
+        for emotion, counter in grouped.items()
+    }
+    fallback = _majority_plan(train_cases)
+    exact_matches = 0
+    seen_keys = 0
+    slot_scores: list[float] = []
+    for case in test_cases:
+        emotion = _source_key(case)[0]
+        if emotion in lookup:
+            seen_keys += 1
+        prediction = lookup.get(emotion, fallback)
+        gold_plan = dict(case.get("gold_plan", {}))
+        exact_matches += int(_plan_signature(prediction) == _plan_signature(gold_plan))
+        slot_scores.append(plan_slot_accuracy(prediction, gold_plan))
+    denominator = len(test_cases) or 1
+    return {
+        "baseline_id": "source_key_holdout_source_emotion_prior_only",
+        "scope": "source_key_disjoint_split_diagnostic",
+        "prior_field": "source_emotion",
+        "train_cases": len(train_cases),
+        "test_cases": len(test_cases),
+        "train_prior_keys": len(lookup),
+        "ambiguous_prior_keys": sum(1 for counter in grouped.values() if len(counter) > 1),
+        "test_keys_seen_in_train": seen_keys,
+        "key_coverage": seen_keys / denominator,
+        "exact_plan_accuracy": exact_matches / denominator,
+        "plan_slot_accuracy": mean(slot_scores) if slot_scores else 0.0,
+        "claim_use": "diagnostic only; no case record or citations",
+    }
