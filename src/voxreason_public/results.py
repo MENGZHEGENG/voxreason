@@ -383,7 +383,7 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     taxonomy_valid, taxonomy_invalid, taxonomy_valid_fraction = _prompt_taxonomy_coverage(all_cases)
 
     return {
-        "scope": "controlled_source_label_diagnostic",
+        "scope": "controlled_source_label_measurement",
         "broad_benchmark_ready": False,
         "total_cases": len(all_cases),
         "public_context_audio_rows": sum(1 for case in all_cases if bool(case.get("context_audio"))),
@@ -466,7 +466,7 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
     denominator = len(test_cases) or 1
     return {
         "baseline_id": "source_key_holdout_source_emotion_prior_only",
-        "scope": "source_key_disjoint_split_diagnostic",
+        "scope": "source_key_disjoint_split_measurement",
         "prior_field": "source_emotion",
         "train_cases": len(train_cases),
         "test_cases": len(test_cases),
@@ -481,5 +481,5 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
         "counterfactual_expected_change_accuracy": mean(cf_expected_scores) if cf_expected_scores else 0.0,
         "counterfactual_unexpected_change_rate": mean(cf_unexpected_scores) if cf_unexpected_scores else 0.0,
         "counterfactual_consistency_score": mean(cf_consistency_scores) if cf_consistency_scores else 0.0,
-        "claim_use": "diagnostic only; no case record or citations",
+        "claim_use": "calibration only; no case record or citations",
     }

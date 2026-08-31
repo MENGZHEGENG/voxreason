@@ -126,7 +126,7 @@ def main() -> None:
         "source_key_overlap_counts": overlap_counts,
         "heldout_ready": all(count == 0 for count in overlap_counts.values()),
         "prompt_counts": prompt_counts,
-        "claim_boundary": "This split tests source-key transfer for automatic planner diagnostics only; it does not report listener judgments or waveform user ratings.",
+        "claim_boundary": "This split tests source-key transfer for automatic planner measurements only; it does not report listener judgments or waveform user ratings.",
     }
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")

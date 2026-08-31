@@ -1,6 +1,6 @@
 # VoxReason
 
-VoxReason is a public code package for evidence-grounded speech reasoning. It includes the source-label diagnostic data and scripts needed to reproduce the listener-free process checks: a model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
+VoxReason is a public code package for evidence-grounded speech reasoning. It includes the source-label measurement data and scripts needed to reproduce the listener-free process checks: a model cites permitted source cues, predicts a structured speaking plan, and is evaluated with automatic checks before any future listener study.
 
 ## What This Release Contains
 
@@ -19,9 +19,9 @@ VoxReason is a public code package for evidence-grounded speech reasoning. It in
 
 This repository intentionally excludes manuscript source, generated tables, figure files, site-specific launch files, machine-local paths, model weights, raw audio, and raw model completions.
 
-## Diagnostic Scope
+## Measurement Scope
 
-VoxReason evaluates whether a speech-reasoning planner grounds each delivery decision in permitted source evidence. The current release is a narrow source-label diagnostic suite, not a broad waveform-quality benchmark, and it does not report listener judgments.
+VoxReason evaluates whether a speech-reasoning planner grounds each delivery decision in permitted source evidence. The current release is a narrow source-label measurement suite, not a broad waveform-quality benchmark, and it does not report listener judgments.
 
 ## Quick Start
 
@@ -46,11 +46,11 @@ The generated files are intentionally ignored by Git:
 - `data/results/source_label_construct_validity.json`
 - `data/results/source_label_acoustic_anchor.json`
 
-## Claim Boundary
+## Evidence Scope
 
 The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, citation-required grounded score, ungated grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
 
-The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, `15/15` deterministic source emotion/intensity mappings, and `100/100` gold plans covered by the prompt taxonomy. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. The script also writes `data/results/source_key_holdout_prior_only.json`: on the source-key-disjoint split, a source-emotion-only prior reaches exact-plan accuracy `0.667` and plan-slot accuracy `0.958` without the case record or citations, but counterfactual consistency is `0.000`. The source-emotion holdout split has train/dev/test counts `56/12/32` with no source-emotion overlap across splits. Treat learned-model rows as diagnostics, not broad speech-benchmark or learned-model ordering claims.
+The source-label split is intentionally narrow. `scripts/reproduce_results.py` also writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio rows, two target utterances, one scene label, `15/15` deterministic source emotion/intensity mappings, and `100/100` gold plans covered by the prompt taxonomy. A source emotion/intensity lookup reaches test exact-plan accuracy `1.000`; leave-key-out exact-plan accuracy falls to `0.000` and plan-slot accuracy falls to `0.242` after same-key training cases are removed. The script also writes `data/results/source_key_holdout_prior_only.json`: on the source-key-disjoint split, a source-emotion-only prior reaches exact-plan accuracy `0.667` and plan-slot accuracy `0.958` without the case record or citations, but counterfactual consistency is `0.000`. The source-emotion holdout split has train/dev/test counts `56/12/32` with no source-emotion overlap across splits. Treat learned-model rows as calibration measurements, not broad speech-benchmark or learned-model ordering claims.
 
 ## Main Reproduction Commands
 
@@ -70,11 +70,11 @@ Expected deterministic score highlights from bundled benchmark files:
 - Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, citation-required score `0.427`, hallucinated-evidence rate `0.000`.
 - Source-label upper bound: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, citation-required score `1.000`, hallucinated-evidence rate `0.000`.
 
-For source-label diagnostic rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
+For source-label measurement rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
 
-The bundled learned-run summaries are included as a lightweight smoke check for the scorer and summary writers. They are not a substitute for rerunning the full multi-seed experiment set used by the paper; regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
+The bundled learned-run summaries are included as a lightweight consistency check for the scorer and summary writers. They are not a substitute for rerunning the full multi-seed experiment set used by the paper; regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
 
-Bundled smoke-check learned-run summaries:
+Bundled consistency-check learned-run summaries:
 
 - Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, citation-required score `0.915`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, citation-required score `0.876`, hallucinated-evidence rate `0.000`.

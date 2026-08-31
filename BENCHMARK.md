@@ -1,10 +1,10 @@
 # VoxReasonBench Card
 
-VoxReasonBench is a listener-free source-label diagnostic suite for evidence-grounded speech reasoning. It tests whether a planner can cite permitted dialogue and speech-cue evidence, predict a structured speaking plan, and respond consistently when cue evidence is edited while the target text is held fixed.
+VoxReasonBench is a listener-free source-label measurement suite for evidence-grounded speech reasoning. It tests whether a planner can cite permitted dialogue and speech-cue evidence, predict a structured speaking plan, and respond consistently when cue evidence is edited while the target text is held fixed.
 
 ## Intended Use
 
-Use this diagnostic suite to evaluate process supervision for speech planning before running any study with listeners. It is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, citation-required grounded score, ungated grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
+Use this measurement suite to evaluate process supervision for speech planning before running any study with listeners. It is suitable for checking evidence precision, evidence recall, evidence F1, plan-slot accuracy, citation-required grounded score, ungated grounded score, unsupported evidence, uncited evidence, and counterfactual cue consistency.
 
 Do not use this suite to claim waveform quality, listener preference, or production suitability. The released files do not contain waveforms or listener ratings.
 
@@ -34,7 +34,7 @@ Two stricter public split variants are included for anti-shortcut checks:
 - Evidence F1: overlap between cited evidence identifiers and permitted gold evidence identifiers.
 - Plan-slot accuracy: exact agreement for structured speaking-plan fields.
 - Citation-required grounded score: primary combined score; it multiplies the grounded score by cited-evidence recall when required gold evidence exists.
-- Grounded score: ungated combined evidence and plan score used for diagnostics.
+- Grounded score: ungated combined evidence and plan score used for source-grounding measurements.
 - Hallucinated-evidence rate: fraction of cited evidence identifiers that are not permitted for the case.
 - Uncited-evidence rate: fraction of required source cues omitted by the prediction.
 - Counterfactual cue consistency: agreement between cue edits and predicted plan changes.
@@ -62,4 +62,4 @@ The checksum file `data/benchmark/source_label/checksums.sha256` records the rel
 
 ## Known Limits
 
-The diagnostic suite is intentionally narrow. It evaluates evidence-grounded planning behavior, not synthesized waveform quality. It also uses a compact public split, so model comparisons should be reported as diagnostic evidence rather than broad claims about all speech-generation settings.
+The measurement suite is intentionally narrow. It evaluates evidence-grounded planning behavior, not synthesized waveform quality. It also uses a compact public split, so model comparisons should be reported as source-grounding evidence rather than broad claims about all speech-generation settings.

@@ -1,6 +1,6 @@
 {
   "case_count": 100,
-  "claim_boundary": "This split tests source-key transfer for automatic planner diagnostics only; it does not report listener judgments or waveform user ratings.",
+  "claim_boundary": "This split tests source-key transfer for automatic planner measurements only; it does not report listener judgments or waveform user ratings.",
   "dev_source_keys": 3,
   "heldout_ready": true,
   "prompt_counts": {

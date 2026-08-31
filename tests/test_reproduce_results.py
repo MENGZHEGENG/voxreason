@@ -66,7 +66,7 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["prior_only_counterfactual_edits"] == 16
     assert construct["prior_only_counterfactual_consistency_score"] == pytest.approx(0.2)
     source_key_prior = source["source_key_holdout_prior_only"]
-    assert source_key_prior["scope"] == "source_key_disjoint_split_diagnostic"
+    assert source_key_prior["scope"] == "source_key_disjoint_split_measurement"
     assert source_key_prior["train_cases"] == 60
     assert source_key_prior["test_cases"] == 24
     assert source_key_prior["test_keys_seen_in_train"] == 24
