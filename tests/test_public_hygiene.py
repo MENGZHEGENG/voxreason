@@ -15,6 +15,7 @@ TEXT_SUFFIXES = {
     ".toml",
     ".txt",
 }
+PUBLIC_MARKDOWN_FILES = {"README.md", "BENCHMARK.md"}
 FORBIDDEN_WORDS = [
     "arti" + "fact",
     "arti" + "facts",
@@ -62,6 +63,18 @@ def test_public_text_has_no_local_or_banned_terms() -> None:
             rel = path.relative_to(ROOT)
             line = text.count("\n", 0, match.start()) + 1
             offenders.append(f"{rel}:{line}:{match.group(0)}")
+    assert offenders == []
+
+
+def test_public_markdown_avoids_report_table_wording() -> None:
+    pattern = re.compile(r"\brows?\b", re.IGNORECASE)
+    offenders: list[str] = []
+    for name in PUBLIC_MARKDOWN_FILES:
+        path = ROOT / name
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for match in pattern.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            offenders.append(f"{name}:{line}:{match.group(0)}")
     assert offenders == []
 
 
