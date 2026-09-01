@@ -102,7 +102,7 @@ def validate_cases(cases: Iterable[dict[str, Any]]) -> dict[str, Any]:
             issues.append(f"{case_id}: duplicate cue_id")
         for text in _walk_strings(case):
             lowered = text.lower()
-            blocked_path_tokens = ("/users/", "/scr" + "atch/", "/work/" + "gengm", "private_audio", ".wav")
+            blocked_path_tokens = ("/users/", "/scr" + "atch/", "/work/", "private_" + "audio", ".wav")
             if any(token in lowered for token in blocked_path_tokens):
                 issues.append(f"{case_id}: non-public path string")
                 break

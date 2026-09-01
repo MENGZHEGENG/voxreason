@@ -85,7 +85,11 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert contrasts["plan_pitch_rough_pitch"]["bootstrap_ci_low"] > 0
 
     models = {row["model"]: row for row in summary["model_results"]}
-    assert set(models) == {"Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"}
+    assert set(models) == {
+        "Qwen2.5-3B source-labelled SFT",
+        "Qwen2.5-7B source-labelled SFT",
+        "Qwen2.5-7B preference",
+    }
     for row in models.values():
         assert 0.0 <= float(row["plan_slot_accuracy_mean"]) <= 1.0
         assert 0.0 <= float(row["citation_required_grounded_score_mean"]) <= 1.0

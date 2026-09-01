@@ -37,7 +37,7 @@ def csv_row(values: list[str]) -> str:
 
 def write_model_csv(rows: list[dict[str, object]], path: Path) -> None:
     lines = [csv_row(["model", "evidence_f1", "plan_accuracy", "grounded", "citation_required", "hallucinated_rate"])]
-    order = ["Qwen2.5-3B SFT", "Qwen2.5-7B SFT", "Qwen2.5-7B preference"]
+    order = ["Qwen2.5-3B source-labelled SFT", "Qwen2.5-7B source-labelled SFT", "Qwen2.5-7B preference"]
     by_model = {str(row["model"]): row for row in rows}
     for label in order:
         row = by_model[label]

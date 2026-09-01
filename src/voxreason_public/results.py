@@ -20,8 +20,8 @@ METRICS = (
 )
 
 MODEL_LABELS = {
-    "82938": "Qwen2.5-3B SFT",
-    "82939": "Qwen2.5-7B SFT",
+    "82938": "Qwen2.5-3B source-labelled SFT",
+    "82939": "Qwen2.5-7B source-labelled SFT",
     "82941": "Qwen2.5-7B preference",
 }
 

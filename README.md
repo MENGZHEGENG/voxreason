@@ -72,12 +72,12 @@ Expected deterministic score highlights from bundled benchmark files:
 
 For source-label measurement rows, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
 
-The bundled learned-run summaries are included as a lightweight consistency check for the scorer and summary writers. They are not a substitute for rerunning the full multi-seed experiment set used by the paper; regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
+The bundled learned-run summaries are included as a lightweight consistency check for the scorer and summary writers. The source-labelled rows use source-cited prompts; they are not a substitute for rerunning the full multi-seed experiment set used by the paper. Regenerate manuscript-grade model aggregates from your own completed run directory before citing model-comparison numbers.
 
 Bundled consistency-check learned-run summaries:
 
-- Qwen2.5-3B SFT: evidence F1 `1.000`, plan accuracy `0.811`, citation-required score `0.915`, hallucinated-evidence rate `0.000`.
-- Qwen2.5-7B SFT: evidence F1 `1.000`, plan accuracy `0.725`, citation-required score `0.876`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-3B source-labelled SFT: evidence F1 `1.000`, plan accuracy `0.811`, citation-required score `0.915`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-7B source-labelled SFT: evidence F1 `1.000`, plan accuracy `0.725`, citation-required score `0.876`, hallucinated-evidence rate `0.000`.
 - Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, citation-required score `0.860`, hallucinated-evidence rate `0.000`.
 
 ## Citation
