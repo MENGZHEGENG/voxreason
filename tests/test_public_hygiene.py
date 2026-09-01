@@ -130,6 +130,14 @@ def test_public_release_has_core_reproduction_files() -> None:
     assert (ROOT / "data/benchmark/source_label/summary.json").is_file()
 
 
+def test_readme_keeps_fast_verification_commands() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "## Fast Verification" in text
+    assert "python3 scripts/check_benchmark_files.py" in text
+    assert "python3 scripts/reproduce_results.py" in text
+    assert "python3 -m pytest tests/test_reproduce_results.py tests/test_public_hygiene.py" in text
+
+
 def test_public_release_excludes_manuscript_source_files() -> None:
     tracked = subprocess.run(
         ["git", "ls-files"],

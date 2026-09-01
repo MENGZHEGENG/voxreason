@@ -46,6 +46,18 @@ The generated files are intentionally ignored by Git:
 - `data/results/source_label_construct_validity.json`
 - `data/results/source_label_acoustic_anchor.json`
 
+## Fast Verification
+
+For a quick independent check, run the commands below after installation:
+
+```bash
+python3 scripts/check_benchmark_files.py
+python3 scripts/reproduce_results.py
+python3 -m pytest tests/test_reproduce_results.py tests/test_public_hygiene.py
+```
+
+The checks verify file integrity, rebuild the compact result summaries, and confirm that public-facing text stays within the listener-free source-label scope.
+
 ## Evidence Scope
 
 The current evidence supports automatic, listener-free process claims: evidence precision/recall/F1, decisive-cue recall, plan-slot accuracy, citation-required grounded score, ungated grounded score, hallucinated-evidence rate, uncited-evidence rate, counterfactual cue consistency, lightweight acoustic preflight checks, and source-label acoustic anchors. It does not report listener judgments or waveform user ratings.
