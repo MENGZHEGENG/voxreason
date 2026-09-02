@@ -23,6 +23,10 @@ This repository intentionally excludes manuscript source, generated tables, figu
 
 VoxReason evaluates whether a speech-reasoning planner grounds each delivery decision in permitted source evidence. The current release is a narrow source-label measurement suite, not a broad waveform-quality benchmark, and it does not report listener judgments.
 
+## Reproducibility
+
+This public GitHub repository is the code-and-data companion to the paper's public version. It lets an outside reader validate checksums, rebuild prompts and held-out splits, rerun the scorer, regenerate the compact public summaries, and rerun the public tests without raw audio, private checkpoints, or site-specific launch logs. For double-blind review, use the separate anonymous paper package rather than this repository URL.
+
 ## Quick Start
 
 ```bash
