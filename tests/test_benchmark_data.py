@@ -1,0 +1,153 @@
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from voxreason_public.benchmark import PLAN_SCHEMA, load_split_cases, score_prediction, validate_cases
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_public_benchmark_cases_are_complete_and_clean() -> None:
+    cases = load_split_cases(ROOT)
+    report = validate_cases(cases)
+
+    assert report["case_count"] == 100
+    assert report["issues"] == []
+
+
+def test_public_prompt_taxonomy_covers_released_gold_plans() -> None:
+    prompt_choices = {
+        field: set(str(choices).split("|"))
+        for field, choices in PLAN_SCHEMA["plan"].items()
+        if isinstance(choices, str)
+    }
+    invalid: list[str] = []
+    for case in load_split_cases(ROOT):
+        plan = case["gold_plan"]
+        for field, choices in prompt_choices.items():
+            value = plan[field]
+            if value not in choices:
+                invalid.append(f"{case['case_id']} {field}={value!r}")
+
+    assert invalid == []
+
+
+def test_public_benchmark_splits_match_expected_counts() -> None:
+    assert len(load_split_cases(ROOT, split="train")) == 67
+    assert len(load_split_cases(ROOT, split="dev")) == 17
+    assert len(load_split_cases(ROOT, split="test")) == 16
+
+
+def read_jsonl(path: Path) -> list[dict[str, object]]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def source_key(row: dict[str, object]) -> tuple[str, str]:
+    metadata = row.get("metadata", {})
+    metadata = metadata if isinstance(metadata, dict) else {}
+    return (str(metadata.get("source_emotion", "")).lower(), str(metadata.get("source_intensity", "")).lower())
+
+
+def test_source_key_holdout_split_is_key_disjoint() -> None:
+    subprocess.run([sys.executable, "scripts/build_source_key_holdout_split.py"], cwd=ROOT, check=True)
+
+    holdout_root = ROOT / "data/benchmark/source_label/source_key_holdout"
+    split_cases = {split: read_jsonl(holdout_root / "splits" / f"{split}_cases_public.jsonl") for split in ("train", "dev", "test")}
+    keys = {split: {source_key(row) for row in rows} for split, rows in split_cases.items()}
+    summary = json.loads((holdout_root / "summary.json").read_text(encoding="utf-8"))
+
+    assert {split: len(rows) for split, rows in split_cases.items()} == {"train": 60, "dev": 16, "test": 24}
+    assert keys["train"].isdisjoint(keys["dev"])
+    assert keys["train"].isdisjoint(keys["test"])
+    assert keys["dev"].isdisjoint(keys["test"])
+    assert summary["heldout_ready"] is True
+    assert summary["source_key_overlap_counts"] == {"dev_test": 0, "train_dev": 0, "train_test": 0}
+    assert validate_cases([row for rows in split_cases.values() for row in rows])["issues"] == []
+
+
+def test_source_emotion_holdout_split_is_emotion_disjoint() -> None:
+    subprocess.run([sys.executable, "scripts/build_source_emotion_holdout_split.py"], cwd=ROOT, check=True)
+
+    holdout_root = ROOT / "data/benchmark/source_label/source_emotion_holdout"
+    split_cases = {split: read_jsonl(holdout_root / "splits" / f"{split}_cases_public.jsonl") for split in ("train", "dev", "test")}
+    emotions = {split: {source_key(row)[0] for row in rows} for split, rows in split_cases.items()}
+    summary = json.loads((holdout_root / "summary.json").read_text(encoding="utf-8"))
+
+    assert {split: len(rows) for split, rows in split_cases.items()} == {"train": 56, "dev": 12, "test": 32}
+    assert emotions["train"].isdisjoint(emotions["dev"])
+    assert emotions["train"].isdisjoint(emotions["test"])
+    assert emotions["dev"].isdisjoint(emotions["test"])
+    assert summary["heldout_ready"] is True
+    assert summary["source_emotion_overlap_counts"] == {"dev_test": 0, "train_dev": 0, "train_test": 0}
+    assert validate_cases([row for rows in split_cases.values() for row in rows])["issues"] == []
+
+
+def test_gold_predictions_score_perfectly() -> None:
+    cases = {case["case_id"]: case for case in load_split_cases(ROOT, split="test")}
+    gold_rows = []
+    for line in (ROOT / "data/benchmark/source_label/test_gold_predictions.jsonl").read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            import json
+
+            gold_rows.append(json.loads(line))
+
+    scores = [score_prediction(cases[row["case_id"]], row) for row in gold_rows]
+    assert len(scores) == 16
+    assert all(score["evidence_f1"] == 1.0 for score in scores)
+    assert all(score["decisive_cue_recall"] == 1.0 for score in scores)
+    assert all(score["plan_slot_accuracy"] == 1.0 for score in scores)
+    assert all(score["grounded_score"] == 1.0 for score in scores)
+    assert all(score["citation_required_grounded_score"] == 1.0 for score in scores)
+    assert all(score["uncited_evidence_rate"] == 0.0 for score in scores)
+
+
+def test_citation_required_score_penalizes_partial_recall() -> None:
+    plan = {
+        "emotion": "neutral",
+        "intent": "inform",
+        "pitch": "neutral",
+        "energy": "medium",
+        "rate": "medium",
+        "pause": "none",
+        "stance": "neutral",
+        "emphasis": [],
+    }
+    case = {
+        "case_id": "partial_case",
+        "gold_cues": [
+            {"cue_id": "cue_a", "cue_type": "emotion", "source": "target_text", "label": "neutral", "text": "a"},
+            {"cue_id": "cue_b", "cue_type": "intensity", "source": "target_text", "label": "normal", "text": "b"},
+        ],
+        "gold_plan": plan,
+    }
+    prediction = {"case_id": "partial_case", "cited_cues": [case["gold_cues"][0]], "plan": plan}
+
+    scores = score_prediction(case, prediction)
+
+    assert scores["evidence_recall"] == 0.5
+    assert scores["citation_required_grounded_score"] == pytest.approx(scores["grounded_score"] * 0.5)
+
+
+def test_benchmark_scripts_run() -> None:
+    subprocess.run([sys.executable, "scripts/validate_benchmark_data.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/check_benchmark_files.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/build_benchmark_prompts.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/build_source_key_holdout_split.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "scripts/build_source_emotion_holdout_split.py"], cwd=ROOT, check=True)
+    subprocess.run(
+        [
+            sys.executable,
+            "scripts/score_predictions.py",
+            "data/benchmark/source_label/test_gold_predictions.jsonl",
+            "--split",
+            "test",
+        ],
+        cwd=ROOT,
+        check=True,
+    )

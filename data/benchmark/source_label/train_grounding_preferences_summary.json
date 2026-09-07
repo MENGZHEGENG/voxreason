@@ -1,0 +1,17 @@
+{
+  "baseline": "rule",
+  "cases": 67,
+  "max_observed_margin": 0.59,
+  "mean_margin": 0.514863184079602,
+  "min_margin": 0.05,
+  "min_observed_margin": 0.17708333333333326,
+  "mode": "evidence_grounded",
+  "pairs": 67,
+  "skipped_low_margin": 0,
+  "weights": {
+    "anti_hallucination": 0.2,
+    "evidence_f1": 0.4,
+    "evidence_recall_floor": 0.05,
+    "plan_slot_accuracy": 0.35
+  }
+}

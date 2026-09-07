@@ -1,0 +1,18 @@
+{
+  "case_count": 100,
+  "dataset_id": "voxreasonbench_source_label_v1",
+  "listener_study_required": false,
+  "local_paths_included": false,
+  "raw_audio_included": false,
+  "scope": "Source-label planner training and automatic evidence-grounding evaluation only; no listener study is reported.",
+  "source_dataset": "ravdess",
+  "source_license": "CC BY-NC-SA 4.0",
+  "source_url": "https://zenodo.org/records/1188976",
+  "split_counts": {
+    "dev_cases": 17,
+    "test_cases": 16,
+    "train_cases": 67
+  },
+  "split_key": "case_id",
+  "split_seed": 20260818
+}

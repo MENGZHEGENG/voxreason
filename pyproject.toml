@@ -1,0 +1,9 @@
+[project]
+name = "voxreason-public"
+version = "0.1.0"
+description = "Public benchmark and verifier package for listener-free source-grounded speech planning."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
