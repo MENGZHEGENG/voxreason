@@ -142,11 +142,17 @@ If you need manuscript-grade model comparisons, rebuild aggregates from your own
 
 If you use VoxReason, please cite the preprint below. The same metadata is mirrored in `CITATION.cff` for GitHub's citation UI. Treat the repository URL as a reproducibility pointer, not the primary scholarly citation.
 
+- arXiv: [arXiv:2609.03203](https://arxiv.org/abs/2609.03203)
+
 ```bibtex
 @article{geng2026voxreason,
   title={VoxReason: Listener-Free Evaluation of Source-Grounded Speech Planning Before Synthesis},
   author={Geng, Mengzhe},
   journal={arXiv preprint arXiv:2609.03203},
-  year={2026}
+  year={2026},
+  eprint={2609.03203},
+  archivePrefix={arXiv},
+  primaryClass={cs.SD},
+  url={https://arxiv.org/abs/2609.03203}
 }
 ```
