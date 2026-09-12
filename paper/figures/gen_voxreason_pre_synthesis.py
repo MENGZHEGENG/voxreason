@@ -118,7 +118,7 @@ def main():
 
     # The top band groups the measured, text-and-plan path. The lower nodes
     # are intentionally outside it because they record downstream or audit
-    # artifacts rather than additional planner stages.
+    # outputs rather than additional planner stages.
     panel = FancyBboxPatch(
         (40, 40),
         1520,
@@ -201,7 +201,7 @@ def main():
     add_arrow(ax, (925, 235), (965, 235))
     add_arrow(ax, (1200, 235), (1230, 235))
 
-    # Lower artifacts have a clear relationship to the measured path.
+    # Lower outputs have a clear relationship to the measured path.
     add_box(
         ax, 365, 510, 340, 175,
         fill=BG, edge=CONNECTOR,
