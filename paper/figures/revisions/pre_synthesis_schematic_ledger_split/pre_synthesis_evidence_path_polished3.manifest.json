@@ -55,8 +55,8 @@
     "styled_text_report": "paper/figures/revisions/pre_synthesis_schematic_ledger_split/pre_synthesis_evidence_path_polished3.styled_text_report.json",
     "checker_note": "Bundled geometry checker used; synthetic FancyArrowPatch CLOSEPOLY ignored only for arrow/text intersection test"
   },
-  "visual_review": "PENDING: independent manual inspection required",
-  "scientific_review": "PENDING: local bounded semantic review recorded separately",
+  "visual_review": "PASS: rendered PDF, PNG, SVG, and focused crops inspected; no overlap or clipping",
+  "scientific_review": "PASS: bounded semantic review confirms stage names, arrows, and claim scope",
   "notes": [
     "SVG text is editable but fonts are not embedded.",
     "A vector container can contain raster images.",

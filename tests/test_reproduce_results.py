@@ -86,8 +86,8 @@ def test_reproduce_results_generates_expected_outputs() -> None:
 
     models = {row["model"]: row for row in summary["model_results"]}
     assert set(models) == {
-        "Qwen2.5-3B source-labelled SFT",
-        "Qwen2.5-7B source-labelled SFT",
+        "Qwen2.5-3B source-labeled SFT",
+        "Qwen2.5-7B source-labeled SFT",
         "Qwen2.5-7B preference",
     }
     for row in models.values():
@@ -103,7 +103,7 @@ def test_readme_score_highlights_match_reproduced_summary() -> None:
     source_label = summary["source_label"]
     expected = {
         "Text-only control": source_label["text_only_control"],
-        "Source-label upper bound": source_label["source_label_upper_bound"],
+        "Source-label oracle": source_label["source_label_upper_bound"],
     }
     for row in summary["model_results"]:
         expected[str(row["model"])] = row

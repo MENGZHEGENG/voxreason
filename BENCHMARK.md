@@ -1,6 +1,6 @@
 # VoxReason Benchmark Card
 
-The VoxReason public benchmark is a listener-free source-label suite for source-grounded speech planning. It asks one controlled question: with the utterance fixed, can a planner cite the source cue that licenses the speaking plan and update only the linked fields when that cue changes?
+The VoxReason public benchmark is a listener-independent source-label suite for source-grounded speech planning. It asks one controlled question: with the utterance fixed, can a planner cite the source cue that licenses the speaking plan and update only the linked fields when that cue changes?
 
 Use this benchmark when you want to test that planning-stage claim directly. Keep conclusions at the planning stage: the public package does not support waveform or listener judgments.
 

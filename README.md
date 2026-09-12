@@ -1,6 +1,6 @@
 # VoxReason
 
-VoxReason is a public benchmark and verifier package for listener-free evaluation of source-grounded speech planning. It asks one controlled question: with the utterance fixed and the licensed cue changed, does a planner cite the right source record, choose the licensed delivery fields, and update only the linked fields?
+VoxReason is a public benchmark and verifier package for listener-independent evaluation of source-grounded speech planning. It asks one controlled question: with the utterance fixed and the licensed cue changed, does a planner cite the right source record, choose the licensed delivery fields, and update only the linked fields?
 
 This public repository packages the VoxReason source-label split, verifier, prompt builders, holdout builders, compact reproduction scripts, and public-hygiene checks needed to verify the paper's planning-stage claims without raw audio, private checkpoints, or site-local launch files.
 
@@ -28,7 +28,7 @@ python3 scripts/reproduce_results.py
 python3 -m pytest tests/test_reproduce_results.py tests/test_public_hygiene.py
 ```
 
-These commands verify file integrity, rebuild the compact public summaries, and check that the public-facing text stays within the listener-free source-label scope.
+These commands verify file integrity, rebuild the compact public summaries, and check that the public-facing text stays within the listener-independent source-label scope.
 
 ## Choose A Path
 
@@ -110,16 +110,18 @@ Generated outputs remain ignored by Git:
 Expected deterministic score highlights from the bundled benchmark files:
 
 - Text-only control: evidence F1 `0.857`, decisive-cue recall `0.000`, plan accuracy `0.185`, citation-required score `0.427`, hallucinated-evidence rate `0.000`.
-- Source-label upper bound: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, citation-required score `1.000`, hallucinated-evidence rate `0.000`.
+- Source-label oracle: evidence F1 `1.000`, decisive-cue recall `1.000`, plan accuracy `1.000`, citation-required score `1.000`, hallucinated-evidence rate `0.000`.
 
-For source-label measurement examples, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label upper bound.
+For source-label measurement examples, uncited-evidence rate is `0.250` for the text-only control and `0.000` for the source-label oracle.
 
 The released source-label split is intentionally focused. `scripts/reproduce_results.py` writes `data/results/source_label_construct_validity.json`, which reports zero public context-audio entries, two target utterances, one scene label, `15/15` deterministic source emotion/intensity mappings, and `100/100` gold plans covered by the prompt taxonomy. It also writes `data/results/source_key_holdout_prior_only.json`, which shows why prior-only shortcuts are unsafe under the source-key-disjoint split.
 
 Bundled learned-run summaries are provided only as scorer-consistency checks:
 
-- Qwen2.5-3B source-labelled SFT: evidence F1 `1.000`, plan accuracy `0.811`, citation-required score `0.915`, hallucinated-evidence rate `0.000`.
-- Qwen2.5-7B source-labelled SFT: evidence F1 `1.000`, plan accuracy `0.725`, citation-required score `0.876`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-3B source-labeled SFT: evidence F1 `1.000`, plan accuracy `0.811`, citation-required score `0.915`, hallucinated-evidence rate `0.000`.
+- Qwen2.5-7B source-labeled SFT: evidence F1 `1.000`, plan accuracy `0.725`, citation-required score `0.876`, hallucinated-evidence rate `0.000`.
+
+Here, SFT denotes supervised fine-tuning.
 - Qwen2.5-7B preference: evidence F1 `1.000`, plan accuracy `0.689`, citation-required score `0.860`, hallucinated-evidence rate `0.000`.
 
 If you need manuscript-grade model comparisons, rebuild aggregates from your own complete run directory.
@@ -146,7 +148,7 @@ If you use VoxReason, please cite the preprint below. The same metadata is mirro
 
 ```bibtex
 @article{geng2026voxreason,
-  title={VoxReason: Listener-Free Evaluation of Source-Grounded Speech Planning Before Synthesis},
+  title={VoxReason: Listener-Independent Evaluation of Source-Grounded Speech Planning Before Synthesis},
   author={Geng, Mengzhe},
   journal={arXiv preprint arXiv:2609.03203},
   year={2026},

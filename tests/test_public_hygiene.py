@@ -153,7 +153,7 @@ def test_readme_keeps_entry_paths() -> None:
 def test_public_docs_keep_top_level_scope_sentence() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     benchmark = (ROOT / "BENCHMARK.md").read_text(encoding="utf-8")
-    assert "listener-free evaluation of source-grounded speech planning" in readme
+    assert "listener-independent evaluation of source-grounded speech planning" in readme
     assert "planning-stage claim" in benchmark
 
 
@@ -167,7 +167,7 @@ def test_readme_keeps_voxreason_citation_block() -> None:
 
 def test_citation_file_keeps_preprint_metadata() -> None:
     text = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
-    assert 'title: "VoxReason: Listener-Free Evaluation of Source-Grounded Speech Planning Before Synthesis"' in text
+    assert 'title: "VoxReason: Listener-Independent Evaluation of Source-Grounded Speech Planning Before Synthesis"' in text
     assert 'family-names: "Geng"' in text
     assert 'given-names: "Mengzhe"' in text
     assert 'journal: "arXiv preprint arXiv:2609.03203"' in text

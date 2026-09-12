@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use VoxReason, please cite the preprint below."
-title: "VoxReason: Listener-Free Evaluation of Source-Grounded Speech Planning Before Synthesis"
+title: "VoxReason: Listener-Independent Evaluation of Source-Grounded Speech Planning Before Synthesis"
 authors:
   - family-names: "Geng"
     given-names: "Mengzhe"
@@ -13,6 +13,6 @@ preferred-citation:
   authors:
     - family-names: "Geng"
       given-names: "Mengzhe"
-  title: "VoxReason: Listener-Free Evaluation of Source-Grounded Speech Planning Before Synthesis"
+  title: "VoxReason: Listener-Independent Evaluation of Source-Grounded Speech Planning Before Synthesis"
   journal: "arXiv preprint arXiv:2609.03203"
   year: 2026
