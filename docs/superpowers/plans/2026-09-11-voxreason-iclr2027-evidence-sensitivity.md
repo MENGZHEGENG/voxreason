@@ -25,6 +25,7 @@ Pending before the paper can be declared finished:
 - The required Claude peer review remains pending because the local Claude service reported a session-limit reset at 5:20 AM America/Toronto. No retry is made during that cooldown.
 - Venue/arXiv release bundles and the final completion audit remain intentionally pending until the Claude gate is satisfied.
 - Incomplete learned-run summaries remain appendix diagnostics only; no learned-model ranking or training claim is promoted.
+- A read-only staged-release audit utility and tests were added in commit `9474d02`; it checks source identity rules, private/legacy paths, archive traversal, and basic PDF/source closure. It is not a substitute for auditing the final bundles.
 
 ## Global Constraints
 
