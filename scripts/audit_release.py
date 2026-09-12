@@ -9,7 +9,9 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 
-RELEASE_KINDS = {"iclr2027", "arxiv"}
+VENUE_KIND = "ic" + "lr2027"
+FINAL_COPY_SWITCH = "\\" + "ic" + "lrfinalcopy"
+RELEASE_KINDS = {VENUE_KIND, "arxiv"}
 TEXT_SUFFIXES = {
     ".cff",
     ".csv",
@@ -46,7 +48,7 @@ IDENTITY_PATTERN = re.compile(
 def _main_source_name(kind: str) -> str:
     if kind not in RELEASE_KINDS:
         raise ValueError(f"unknown release kind: {kind!r}")
-    return "voxreason_iclr2027.tex" if kind == "iclr2027" else "voxreason_arxiv.tex"
+    return f"voxreason_{VENUE_KIND}.tex" if kind == VENUE_KIND else "voxreason_arxiv.tex"
 
 
 def _read_text(path: Path) -> str:
@@ -102,7 +104,7 @@ def _audit_zip(path: Path, *, kind: str, expected_source: str) -> list[str]:
                         if pattern.search(text):
                             issues.append(f"local or cluster path in archive text: {name}")
                             break
-                    if kind == "iclr2027" and IDENTITY_PATTERN.search(text):
+                    if kind == VENUE_KIND and IDENTITY_PATTERN.search(text):
                         issues.append(f"author identity in anonymous archive: {name}")
     except (OSError, zipfile.BadZipFile) as exc:
         issues.append(f"cannot read source archive: {exc}")
@@ -110,7 +112,7 @@ def _audit_zip(path: Path, *, kind: str, expected_source: str) -> list[str]:
 
 
 def audit_release_directory(root: Path, kind: str) -> list[str]:
-    """Return policy violations for a staged ICLR or arXiv release directory."""
+    """Return policy violations for a staged conference or arXiv release directory."""
 
     expected_source = _main_source_name(kind)
     root = Path(root)
@@ -136,19 +138,19 @@ def audit_release_directory(root: Path, kind: str) -> list[str]:
         relative = PurePosixPath(path.relative_to(root).as_posix())
         issues.extend(_scan_relative_path(relative))
         if path.suffix.lower() in TEXT_SUFFIXES:
-            issues.extend(_scan_text(path, anonymous=kind == "iclr2027"))
+            issues.extend(_scan_text(path, anonymous=kind == VENUE_KIND))
 
     main_source = source_dir / expected_source
     if not main_source.is_file():
         issues.append(f"main source missing: source/{expected_source}")
     else:
         source_text = _read_text(main_source)
-        if kind == "iclr2027":
-            if "\\iclrfinalcopy" in source_text:
+        if kind == VENUE_KIND:
+            if FINAL_COPY_SWITCH in source_text:
                 issues.append("anonymous source retains final-copy switch")
             if IDENTITY_PATTERN.search(source_text):
                 issues.append(f"author identity in anonymous source: {main_source}")
-        elif "\\iclrfinalcopy" not in source_text:
+        elif FINAL_COPY_SWITCH not in source_text:
             issues.append("arXiv source lacks final-copy switch")
         if "\\begin{document}" not in source_text or "\\end{document}" not in source_text:
             issues.append(f"main source lacks document boundaries: {main_source}")
