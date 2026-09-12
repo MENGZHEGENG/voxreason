@@ -65,6 +65,12 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert construct["prior_only_plan_slot_accuracy"] == 0.953125
     assert construct["prior_only_counterfactual_edits"] == 16
     assert construct["prior_only_counterfactual_consistency_score"] == pytest.approx(0.2)
+    construct_cf = construct["prior_only_counterfactual"]
+    assert construct_cf["status"] == "ok"
+    assert construct_cf["n_pairs"] == 16
+    assert construct_cf["n_required_slots"] == 48
+    assert construct_cf["n_preserved_slots"] == 80
+    assert construct_cf["n_missing"] == 0
     source_key_prior = source["source_key_holdout_prior_only"]
     assert source_key_prior["scope"] == "source_key_disjoint_split_measurement"
     assert source_key_prior["train_cases"] == 60
@@ -75,6 +81,12 @@ def test_reproduce_results_generates_expected_outputs() -> None:
     assert source_key_prior["citation_required_grounded_score"] == 0.0
     assert source_key_prior["counterfactual_edits"] == 24
     assert source_key_prior["counterfactual_consistency_score"] == 0.0
+    source_key_cf = source_key_prior["counterfactual"]
+    assert source_key_cf["status"] == "ok"
+    assert source_key_cf["n_pairs"] == 24
+    assert source_key_cf["n_required_slots"] == 72
+    assert source_key_cf["n_preserved_slots"] == 120
+    assert source_key_cf["n_missing"] == 0
     acoustic_anchor = source["acoustic_anchor"]
     assert acoustic_anchor["anchor_ready"] is True
     assert acoustic_anchor["matched_cases"] == 100

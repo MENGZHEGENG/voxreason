@@ -265,14 +265,84 @@ def _changed_plan_slots(before: dict[str, object], after: dict[str, object]) -> 
     return {field for field in ALL_PLAN_FIELDS if not _values_equal(_plan_value(before, field), _plan_value(after, field))}
 
 
-def _counterfactual_score(original_plan: dict[str, object], counterfactual_plan: dict[str, object], expected_delta: dict[str, object]) -> tuple[float, float, float]:
+def _counterfactual_score(
+    original_plan: dict[str, object],
+    counterfactual_plan: dict[str, object],
+    expected_delta: dict[str, object],
+) -> dict[str, object]:
+    """Score one paired plan transition against the declared gold delta.
+
+    A final value equal to the expected counterfactual value is not enough:
+    the model must also change that slot relative to its original prediction.
+    This prevents a prior that always emits the counterfactual value from
+    receiving credit for evidence sensitivity.
+    """
     expected_slots = set(expected_delta)
     observed_changes = _changed_plan_slots(original_plan, counterfactual_plan)
-    expected_hits = sum(1 for slot, expected in expected_delta.items() if _values_equal(_plan_value(counterfactual_plan, slot), expected))
-    expected_change_accuracy = expected_hits / len(expected_slots) if expected_slots else 1.0
     stable_slots = set(ALL_PLAN_FIELDS) - expected_slots
-    unexpected_change_rate = len(observed_changes - expected_slots) / len(stable_slots) if stable_slots else 0.0
-    return expected_change_accuracy, unexpected_change_rate, max(0.0, expected_change_accuracy * (1.0 - unexpected_change_rate))
+    if not expected_slots:
+        return {
+            "status": "invalid_no_expected_slots",
+            "required_change_accuracy": 0.0,
+            "preservation_rate": 0.0,
+            "unexpected_change_rate": 0.0,
+            "consistency_score": 0.0,
+            "n_required_slots": 0,
+            "n_preserved_slots": len(stable_slots),
+        }
+
+    expected_hits = sum(
+        1
+        for slot, expected in expected_delta.items()
+        if slot in observed_changes and _values_equal(_plan_value(counterfactual_plan, slot), expected)
+    )
+    preserved_hits = sum(
+        1
+        for slot in stable_slots
+        if _values_equal(_plan_value(original_plan, slot), _plan_value(counterfactual_plan, slot))
+    )
+    required_change_accuracy = expected_hits / len(expected_slots)
+    preservation_rate = preserved_hits / len(stable_slots) if stable_slots else 1.0
+    unexpected_change_rate = 1.0 - preservation_rate
+    return {
+        "status": "ok",
+        "required_change_accuracy": required_change_accuracy,
+        "preservation_rate": preservation_rate,
+        "unexpected_change_rate": unexpected_change_rate,
+        "consistency_score": max(0.0, required_change_accuracy * preservation_rate),
+        "n_required_slots": len(expected_slots),
+        "n_preserved_slots": len(stable_slots),
+    }
+
+
+def _aggregate_counterfactual_scores(scores: list[dict[str, object]], *, n_missing: int = 0) -> dict[str, object]:
+    valid_scores = [score for score in scores if score.get("status") == "ok"]
+    n_pairs = len(valid_scores)
+    result: dict[str, object] = {
+        "n_pairs": n_pairs,
+        "n_required_slots": sum(int(score["n_required_slots"]) for score in valid_scores),
+        "n_preserved_slots": sum(int(score["n_preserved_slots"]) for score in valid_scores),
+        "n_missing": n_missing,
+        "status": "ok" if n_pairs else "zero_denominator",
+        "counterfactual_edits": n_pairs,
+        "counterfactual_expected_change_accuracy": mean(
+            float(score["required_change_accuracy"]) for score in valid_scores
+        )
+        if valid_scores
+        else 0.0,
+        "counterfactual_preservation_rate": mean(float(score["preservation_rate"]) for score in valid_scores)
+        if valid_scores
+        else 0.0,
+        "counterfactual_unexpected_change_rate": mean(
+            float(score["unexpected_change_rate"]) for score in valid_scores
+        )
+        if valid_scores
+        else 0.0,
+        "counterfactual_consistency_score": mean(float(score["consistency_score"]) for score in valid_scores)
+        if valid_scores
+        else 0.0,
+    }
+    return result
 
 
 def _prompt_taxonomy_coverage(cases: list[dict[str, object]]) -> tuple[int, int, float]:
@@ -323,9 +393,7 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
     prior_exact_matches = 0
     prior_seen_keys = 0
     prior_slot_scores: list[float] = []
-    prior_cf_expected_scores: list[float] = []
-    prior_cf_unexpected_scores: list[float] = []
-    prior_cf_consistency_scores: list[float] = []
+    prior_cf_scores: list[dict[str, object]] = []
     heldout_keys: set[tuple[str, str]] = set()
     for case in test_cases:
         key = _source_key(case)
@@ -351,10 +419,7 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
                 continue
             counterfactual_emotion = normalize_label(expected_delta.get("emotion", emotion))
             counterfactual_prediction = prior_lookup.get(counterfactual_emotion, fallback)
-            expected_score, unexpected_rate, consistency = _counterfactual_score(prior_prediction, counterfactual_prediction, expected_delta)
-            prior_cf_expected_scores.append(expected_score)
-            prior_cf_unexpected_scores.append(unexpected_rate)
-            prior_cf_consistency_scores.append(consistency)
+            prior_cf_scores.append(_counterfactual_score(prior_prediction, counterfactual_prediction, expected_delta))
 
         reduced_train = [row for row in train_cases if _source_key(row) != key]
         reduced_grouped: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
@@ -370,6 +435,7 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         key_holdout_slot_scores.append(plan_slot_accuracy(key_holdout_prediction, gold_plan))
 
     denominator = len(test_cases) or 1
+    prior_cf_summary = _aggregate_counterfactual_scores(prior_cf_scores)
     scenes = {_cue_label(case, "scene_state") for case in all_cases if _cue_label(case, "scene_state")}
     roles = {_cue_label(case, "speaker_role") for case in all_cases if _cue_label(case, "speaker_role")}
     texts = {str(case.get("target_text", "")).strip() for case in all_cases if str(case.get("target_text", "")).strip()}
@@ -415,10 +481,15 @@ def summarize_construct_validity(root: Path) -> dict[str, object]:
         "prior_only_test_keys_seen_in_train": prior_seen_keys,
         "prior_only_exact_plan_accuracy": prior_exact_matches / denominator,
         "prior_only_plan_slot_accuracy": mean(prior_slot_scores) if prior_slot_scores else 0.0,
-        "prior_only_counterfactual_edits": len(prior_cf_consistency_scores),
-        "prior_only_counterfactual_expected_change_accuracy": mean(prior_cf_expected_scores) if prior_cf_expected_scores else 0.0,
-        "prior_only_counterfactual_unexpected_change_rate": mean(prior_cf_unexpected_scores) if prior_cf_unexpected_scores else 0.0,
-        "prior_only_counterfactual_consistency_score": mean(prior_cf_consistency_scores) if prior_cf_consistency_scores else 0.0,
+        "prior_only_counterfactual": prior_cf_summary,
+        "prior_only_counterfactual_edits": prior_cf_summary["n_pairs"],
+        "prior_only_counterfactual_expected_change_accuracy": prior_cf_summary[
+            "counterfactual_expected_change_accuracy"
+        ],
+        "prior_only_counterfactual_unexpected_change_rate": prior_cf_summary[
+            "counterfactual_unexpected_change_rate"
+        ],
+        "prior_only_counterfactual_consistency_score": prior_cf_summary["counterfactual_consistency_score"],
         "plan_fields": list(PLAN_FIELDS) + ["emphasis"],
     }
 
@@ -440,9 +511,7 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
     exact_matches = 0
     seen_keys = 0
     slot_scores: list[float] = []
-    cf_expected_scores: list[float] = []
-    cf_unexpected_scores: list[float] = []
-    cf_consistency_scores: list[float] = []
+    cf_scores: list[dict[str, object]] = []
     for case in test_cases:
         emotion = _source_key(case)[0]
         if emotion in lookup:
@@ -459,10 +528,8 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
                 continue
             counterfactual_emotion = normalize_label(expected_delta.get("emotion", emotion))
             counterfactual_prediction = lookup.get(counterfactual_emotion, fallback)
-            expected_score, unexpected_rate, consistency = _counterfactual_score(prediction, counterfactual_prediction, expected_delta)
-            cf_expected_scores.append(expected_score)
-            cf_unexpected_scores.append(unexpected_rate)
-            cf_consistency_scores.append(consistency)
+            cf_scores.append(_counterfactual_score(prediction, counterfactual_prediction, expected_delta))
+    counterfactual_summary = _aggregate_counterfactual_scores(cf_scores)
     denominator = len(test_cases) or 1
     return {
         "baseline_id": "source_key_holdout_source_emotion_prior_only",
@@ -477,9 +544,10 @@ def summarize_source_key_holdout_prior(root: Path) -> dict[str, object]:
         "exact_plan_accuracy": exact_matches / denominator,
         "plan_slot_accuracy": mean(slot_scores) if slot_scores else 0.0,
         "citation_required_grounded_score": 0.0,
-        "counterfactual_edits": len(cf_consistency_scores),
-        "counterfactual_expected_change_accuracy": mean(cf_expected_scores) if cf_expected_scores else 0.0,
-        "counterfactual_unexpected_change_rate": mean(cf_unexpected_scores) if cf_unexpected_scores else 0.0,
-        "counterfactual_consistency_score": mean(cf_consistency_scores) if cf_consistency_scores else 0.0,
+        "counterfactual": counterfactual_summary,
+        "counterfactual_edits": counterfactual_summary["n_pairs"],
+        "counterfactual_expected_change_accuracy": counterfactual_summary["counterfactual_expected_change_accuracy"],
+        "counterfactual_unexpected_change_rate": counterfactual_summary["counterfactual_unexpected_change_rate"],
+        "counterfactual_consistency_score": counterfactual_summary["counterfactual_consistency_score"],
         "claim_use": "calibration only; no case record or citations",
     }

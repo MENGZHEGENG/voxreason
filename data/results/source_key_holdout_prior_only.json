@@ -3,6 +3,18 @@
   "baseline_id": "source_key_holdout_source_emotion_prior_only",
   "citation_required_grounded_score": 0.0,
   "claim_use": "calibration only; no case record or citations",
+  "counterfactual": {
+    "counterfactual_consistency_score": 0.0,
+    "counterfactual_edits": 24,
+    "counterfactual_expected_change_accuracy": 0.0,
+    "counterfactual_preservation_rate": 0.0,
+    "counterfactual_unexpected_change_rate": 1.0,
+    "n_missing": 0,
+    "n_pairs": 24,
+    "n_preserved_slots": 120,
+    "n_required_slots": 72,
+    "status": "ok"
+  },
   "counterfactual_consistency_score": 0.0,
   "counterfactual_edits": 24,
   "counterfactual_expected_change_accuracy": 0.0,
