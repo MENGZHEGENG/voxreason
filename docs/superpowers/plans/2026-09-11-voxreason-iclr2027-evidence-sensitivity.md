@@ -10,7 +10,7 @@
 
 **Spec:** This document is the execution specification for the GPT-6 evidence-grounded paper plan; the current benchmark and manuscript remain the source of truth for exact schemas and already-verified numbers.
 
-## Execution status — 2026-09-12 00:46 EDT
+## Execution status — 2026-09-12 09:10 EDT
 
 Completed in the current working tree:
 
@@ -18,12 +18,12 @@ Completed in the current working tree:
 - The evidence-sensitivity matrix completed six controlled conditions over three deterministic seeds and 24 source-key-disjoint pairs, yielding 432 expected, observed, and valid records with zero missing or duplicate rows.
 - The claim-safe analysis, manuscript revision, evidence-sensitivity table, polished pre-synthesis schematic, rendered PDF checks, and three-skill local review cycle were completed.
 - The compact evidence-sensitivity results figure was generated from the audited summary, exported as PDF and PNG, included in the manuscript, and inspected both standalone and in the rendered ten-page PDF.
-- The final manuscript source, claim analysis, results table and figure, QA record, local review records, and lightweight LaTeX dependencies were committed and pushed in `d942f38`.
+- The final manuscript source, claim analysis, results table and figure, QA record, local review records, and lightweight LaTeX dependencies were committed and pushed in `d942f38`; the execution-status update was pushed in `d7f7f95`.
 - The final local review records the known four public-release-hygiene test failures; they arise from intentionally tracked manuscript/figure outputs and are not code or benchmark failures.
 
 Pending before the paper can be declared finished:
 
-- The required Claude peer review remains pending because the local Claude service reported a session-limit reset at 5:20 AM America/Toronto. No retry is made during that cooldown.
+- The required Claude peer review remains pending because an invocation after the prior reset returned a new session-limit response with reset at 10:20 AM America/Toronto. No further retry is made during that cooldown.
 - Venue/arXiv release bundles and the final completion audit remain intentionally pending until the Claude gate is satisfied.
 - Incomplete learned-run summaries remain appendix diagnostics only; no learned-model ranking or training claim is promoted.
 - A read-only staged-release audit utility and tests were added in commit `9474d02`; it checks source identity rules, private/legacy paths, archive traversal, and basic PDF/source closure. It is not a substitute for auditing the final bundles.
