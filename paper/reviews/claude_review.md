@@ -1,1 +1,1 @@
-You've hit your session limit · resets 10:20am (America/Toronto)
+You've hit your session limit · resets 9:20pm (America/Toronto)

@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "errors": [],
+  "warnings": [],
+  "canvas_mm": [
+    180.0,
+    108.0
+  ],
+  "font_pt": 8.5,
+  "min_font_pt": 7.5,
+  "nodes_mm": {
+    "case_record": [
+      3.0,
+      67.0,
+      38.0,
+      93.0
+    ],
+    "typed_planner": [
+      40.0,
+      67.0,
+      71.0,
+      93.0
+    ],
+    "verifier": [
+      75.0,
+      67.0,
+      103.0,
+      93.0
+    ],
+    "one_cue_edit": [
+      108.0,
+      67.0,
+      141.0,
+      93.0
+    ],
+    "listener_checks": [
+      143.0,
+      67.0,
+      178.5,
+      93.0
+    ],
+    "waveform_path": [
+      6.0,
+      12.0,
+      50.0,
+      42.0
+    ],
+    "evidence_validity": [
+      56.0,
+      12.0,
+      92.0,
+      42.0
+    ],
+    "evidence_locality": [
+      96.0,
+      12.0,
+      130.0,
+      42.0
+    ],
+    "evidence_coverage": [
+      135.0,
+      12.0,
+      174.0,
+      42.0
+    ]
+  },
+  "text_boxes_mm": {
+    "node:case_record": [
+      6.166611328125,
+      74.82739583333334,
+      34.833388671875,
+      85.17260416666667
+    ],
+    "node:typed_planner": [
+      43.752500000000005,
+      71.37899305555555,
+      67.2475,
+      88.62100694444445
+    ],
+    "node:verifier": [
+      80.61973632812501,
+      71.37899305555555,
+      97.38026367187501,
+      88.62100694444445
+    ],
+    "node:one_cue_edit": [
+      110.09963867187501,
+      74.82739583333334,
+      138.900361328125,
+      85.17260416666667
+    ],
+    "node:listener_checks": [
+      145.33884765625,
+      71.37899305555555,
+      176.16115234375002,
+      88.62100694444445
+    ],
+    "node:waveform_path": [
+      11.238232421875,
+      20.103194444444444,
+      44.761767578125,
+      33.89680555555556
+    ],
+    "node:evidence_validity": [
+      58.793486328125006,
+      23.551597222222224,
+      89.206513671875,
+      30.44840277777778
+    ],
+    "node:evidence_locality": [
+      100.83578125000001,
+      23.551597222222224,
+      125.16421875,
+      30.44840277777778
+    ],
+    "node:evidence_coverage": [
+      139.08884765625,
+      21.827395833333334,
+      169.91115234375002,
+      32.17260416666667
+    ]
+  },
+  "edge_routes_mm": {
+    "case_to_planner": [
+      [
+        38.0,
+        80.0
+      ],
+      [
+        40.0,
+        80.0
+      ]
+    ],
+    "planner_to_verifier": [
+      [
+        71.0,
+        80.0
+      ],
+      [
+        75.0,
+        80.0
+      ]
+    ],
+    "verifier_to_edit": [
+      [
+        103.0,
+        80.0
+      ],
+      [
+        108.0,
+        80.0
+      ]
+    ],
+    "edit_to_checks": [
+      [
+        141.0,
+        80.0
+      ],
+      [
+        143.0,
+        80.0
+      ]
+    ],
+    "planner_to_waveform": [
+      [
+        55.5,
+        67.0
+      ],
+      [
+        55.5,
+        55.0
+      ],
+      [
+        28.0,
+        55.0
+      ],
+      [
+        28.0,
+        42.0
+      ]
+    ],
+    "verifier_to_evidence_validity": [
+      [
+        89.0,
+        67.0
+      ],
+      [
+        89.0,
+        55.0
+      ],
+      [
+        74.0,
+        55.0
+      ],
+      [
+        74.0,
+        42.0
+      ]
+    ],
+    "edit_to_evidence_locality": [
+      [
+        124.5,
+        67.0
+      ],
+      [
+        124.5,
+        55.0
+      ],
+      [
+        113.0,
+        55.0
+      ],
+      [
+        113.0,
+        42.0
+      ]
+    ],
+    "checks_to_evidence_coverage": [
+      [
+        160.75,
+        67.0
+      ],
+      [
+        160.75,
+        55.0
+      ],
+      [
+        154.5,
+        55.0
+      ],
+      [
+        154.5,
+        42.0
+      ]
+    ]
+  },
+  "semantic_edges": [
+    {
+      "id": "case_to_planner",
+      "source": "case_record",
+      "target": "typed_planner",
+      "kind": "flow"
+    },
+    {
+      "id": "planner_to_verifier",
+      "source": "typed_planner",
+      "target": "verifier",
+      "kind": "flow"
+    },
+    {
+      "id": "verifier_to_edit",
+      "source": "verifier",
+      "target": "one_cue_edit",
+      "kind": "flow"
+    },
+    {
+      "id": "edit_to_checks",
+      "source": "one_cue_edit",
+      "target": "listener_checks",
+      "kind": "flow"
+    },
+    {
+      "id": "planner_to_waveform",
+      "source": "typed_planner",
+      "target": "waveform_path",
+      "kind": "flow"
+    },
+    {
+      "id": "verifier_to_evidence_validity",
+      "source": "verifier",
+      "target": "evidence_validity",
+      "kind": "flow"
+    },
+    {
+      "id": "edit_to_evidence_locality",
+      "source": "one_cue_edit",
+      "target": "evidence_locality",
+      "kind": "flow"
+    },
+    {
+      "id": "checks_to_evidence_coverage",
+      "source": "listener_checks",
+      "target": "evidence_coverage",
+      "kind": "flow"
+    }
+  ],
+  "scope": "Bundled rectangular-node renderer only; not arbitrary SVG/PDF validation",
+  "scientific_review": "PENDING: compare semantic specification against method/source",
+  "visual_review": "PENDING: inspect exported PDF and SVG at intended manuscript size"
+}

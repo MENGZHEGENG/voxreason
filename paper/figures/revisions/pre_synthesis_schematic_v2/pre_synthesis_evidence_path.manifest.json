@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "size_mm": [
+    180.0,
+    108.0
+  ],
+  "environment": {
+    "python": "3.14.6",
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+    "packages": {
+      "matplotlib": "3.11.1",
+      "numpy": "2.5.2",
+      "Pillow": "12.3.0"
+    }
+  },
+  "inputs": [
+    {
+      "path": "/Users/gengm/Documents/ChatGPT/Speech Xuewei/voxreason-patchwork-20260818-214303/repo/paper/figures/revisions/pre_synthesis_schematic_v2/figure.spec.json",
+      "sha256": "60c0664a98eea36f5ca7ca90140f2916a80eeaec4cf410eb78bfae8d9c7ca72c"
+    },
+    {
+      "path": "/Users/gengm/Documents/ChatGPT/Speech Xuewei/voxreason-patchwork-20260818-214303/repo/paper/figures/revisions/pre_synthesis_schematic_v2/figure.layout.json",
+      "sha256": "16b94961d6465461a6c12ffe0a13260a30c1ab6147dab08525d9c7539ac681e9"
+    },
+    {
+      "path": "/Users/gengm/Documents/ChatGPT/Speech Xuewei/voxreason-patchwork-20260818-214303/repo/paper/figures/revisions/pre_synthesis_schematic_v2/render_schematic_checked.py",
+      "sha256": "e08d98d71f5cdca83bcf9fd04e26485be1afd738c1a340598e3acb4e245ac5cb"
+    },
+    {
+      "path": "/Users/gengm/.codex/skills/academic-figure-builder/scripts/render_schematic.py",
+      "sha256": "8abd753ad6bc346fca3f0c045de5c69474b88dc2160c974783b2762b90239253"
+    },
+    {
+      "path": "/Users/gengm/.codex/skills/academic-figure-builder/scripts/figurekit.py",
+      "sha256": "095305ac17e206822fbc20fa5fc551c008a41986b6ebce72907a9d51f1ded7a2"
+    }
+  ],
+  "outputs": {
+    "pdf": {
+      "path": "/Users/gengm/Documents/ChatGPT/Speech Xuewei/voxreason-patchwork-20260818-214303/repo/paper/figures/revisions/pre_synthesis_schematic_v2/pre_synthesis_evidence_path.pdf",
+      "sha256": "b25a3d56bc3c4219d84b19051faac02b8de4a551420206a6419eb7e5160cb1bd"
+    },
+    "svg": {
+      "path": "/Users/gengm/Documents/ChatGPT/Speech Xuewei/voxreason-patchwork-20260818-214303/repo/paper/figures/revisions/pre_synthesis_schematic_v2/pre_synthesis_evidence_path.svg",
+      "sha256": "67b9b0ad5ce545a6650ab75a969ca5f04f9d337e45c7d1369b601c3549714754"
+    },
+    "png": {
+      "path": "/Users/gengm/Documents/ChatGPT/Speech Xuewei/voxreason-patchwork-20260818-214303/repo/paper/figures/revisions/pre_synthesis_schematic_v2/pre_synthesis_evidence_path.png",
+      "sha256": "79c4eaeec2416701e99c938ea36d6e055a4616a8eaaa63d81caac49f0fef5e79"
+    }
+  },
+  "provenance": {
+    "semantic_status": "User-authored example/spec; not scientifically verified",
+    "geometry_report": "paper/figures/revisions/pre_synthesis_schematic_v2/pre_synthesis_evidence_path.geometry.json",
+    "checker_note": "Synthetic FancyArrowPatch CLOSEPOLY ignored only for arrow/text intersection test"
+  },
+  "visual_review": "NOT_PERFORMED_BY_EXPORTER",
+  "scientific_review": "NOT_PERFORMED_BY_EXPORTER",
+  "notes": [
+    "SVG text is editable but fonts are not embedded.",
+    "A vector container can contain raster images.",
+    "DPI affects PNG and embedded raster elements, not vector sharpness."
+  ]
+}

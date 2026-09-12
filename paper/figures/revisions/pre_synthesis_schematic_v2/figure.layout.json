@@ -1,0 +1,55 @@
+{
+  "nodes": {
+    "case_record": {"xy_mm": [3, 67], "size_mm": [35, 26]},
+    "typed_planner": {"xy_mm": [40, 67], "size_mm": [31, 26]},
+    "verifier": {"xy_mm": [75, 67], "size_mm": [28, 26]},
+    "one_cue_edit": {"xy_mm": [108, 67], "size_mm": [33, 26]},
+    "listener_checks": {"xy_mm": [143, 67], "size_mm": [35.5, 26]},
+    "waveform_path": {"xy_mm": [6, 12], "size_mm": [44, 30]},
+    "evidence_validity": {"xy_mm": [56, 12], "size_mm": [36, 30]},
+    "evidence_locality": {"xy_mm": [96, 12], "size_mm": [34, 30]},
+    "evidence_coverage": {"xy_mm": [135, 12], "size_mm": [39, 30]}
+  },
+  "edges": {
+    "case_to_planner": {
+      "source_port": "E",
+      "target_port": "W",
+      "via_mm": []
+    },
+    "planner_to_verifier": {
+      "source_port": "E",
+      "target_port": "W",
+      "via_mm": []
+    },
+    "verifier_to_edit": {
+      "source_port": "E",
+      "target_port": "W",
+      "via_mm": []
+    },
+    "edit_to_checks": {
+      "source_port": "E",
+      "target_port": "W",
+      "via_mm": []
+    },
+    "planner_to_waveform": {
+      "source_port": "S",
+      "target_port": "N",
+      "via_mm": [[55.5, 55], [28, 55]]
+    },
+    "verifier_to_evidence_validity": {
+      "source_port": "S",
+      "target_port": "N",
+      "via_mm": [[89, 55], [74, 55]]
+    },
+    "edit_to_evidence_locality": {
+      "source_port": "S",
+      "target_port": "N",
+      "via_mm": [[124.5, 55], [113, 55]]
+    },
+    "checks_to_evidence_coverage": {
+      "source_port": "S",
+      "target_port": "N",
+      "via_mm": [[160.75, 55], [154.5, 55]]
+    }
+  }
+}

@@ -10,7 +10,7 @@
 
 **Spec:** This document is the execution specification for the GPT-6 evidence-grounded paper plan; the current benchmark and manuscript remain the source of truth for exact schemas and already-verified numbers.
 
-## Execution status — 2026-09-12 09:10 EDT
+## Execution status — 2026-09-12 18:10 EDT
 
 Completed in the current working tree:
 
@@ -18,13 +18,16 @@ Completed in the current working tree:
 - The evidence-sensitivity matrix completed six controlled conditions over three deterministic seeds and 24 source-key-disjoint pairs, yielding 432 expected, observed, and valid records with zero missing or duplicate rows.
 - The claim-safe analysis, manuscript revision, evidence-sensitivity table, polished pre-synthesis schematic, rendered PDF checks, and three-skill local review cycle were completed.
 - The compact evidence-sensitivity results figure was generated from the audited summary, exported as PDF and PNG, included in the manuscript, and inspected both standalone and in the rendered ten-page PDF.
+- The two paper figures were redrawn into fresh `v2` revision directories using fixed-dimension vector-first exports, constrained layout, and the figure-builder/figure-QA workflow; the rendered PDF previews passed visual inspection with no overlap or clipping.
 - The final manuscript source, claim analysis, results table and figure, QA record, local review records, and lightweight LaTeX dependencies were committed and pushed in `d942f38`; the execution-status update was pushed in `d7f7f95`.
 - The final local review records the known four public-release-hygiene test failures; they arise from intentionally tracked manuscript/figure outputs and are not code or benchmark failures.
+- An author-facing arXiv bundle was compiled independently from an isolated source tree with bundled Tectonic, round-trip compiled from `source.zip`, and passed `scripts/audit_release.py`.
+- The verified arXiv PDF and source ZIP were copied to `/Users/gengm/Desktop/voxreason_arxiv_2026-09-12/` with matching SHA-256 checksums.
 
-Pending before the paper can be declared finished:
+Pending before the broader paper can be declared finished:
 
-- The required Claude peer review remains pending because an invocation after the prior reset returned a new session-limit response with reset at 10:20 AM America/Toronto. No further retry is made during that cooldown.
-- Venue/arXiv release bundles and the final completion audit remain intentionally pending until the Claude gate is satisfied.
+- The user explicitly instructed this turn to ignore Claude, so no substantive Claude review was obtained. This is an explicit waiver for the urgent arXiv handoff, not completion of the required external review gate.
+- The anonymous ICLR venue bundle remains deferred; the author-facing arXiv bundle is complete and audited.
 - Incomplete learned-run summaries remain appendix diagnostics only; no learned-model ranking or training claim is promoted.
 - A read-only staged-release audit utility and tests were added in commit `9474d02`; it checks source identity rules, private/legacy paths, archive traversal, and basic PDF/source closure. It is not a substitute for auditing the final bundles.
 
@@ -197,9 +200,9 @@ Pending before the paper can be declared finished:
 
   Use the sequence: why evidence-sensitive speech planning matters; why ordinary accuracy/citation scores are insufficient; the paired intervention and preservation protocol; benchmark and leakage boundaries; results with negative evidence; calibrated conclusions and limitations. Add a concise contributions section, explicit evaluation question, exact scope, and in-text `\ref` pointers for every figure/table.
 
-- [ ] **Step 4: Build venue and arXiv variants.**
+- [x] **Step 4: Build the author-facing arXiv variant.**
 
-  Maintain anonymous ICLR source separately from author-facing arXiv source. Remove only line numbers in arXiv; preserve author information and content. Include the required AI-use and reproducibility statements where the template permits.
+  Built and audited `release/arxiv/` with the author block and `\iclrfinalcopy` preserved. The anonymous ICLR source remains a separate deferred deliverable.
 
 - [x] **Step 5: Commit the analysis and manuscript revision.**
 
@@ -266,7 +269,7 @@ Pending before the paper can be declared finished:
 
 - [ ] **Step 4: Obtain at least one Claude review.**
 
-  Invoke the local Claude skill with Sonnet 5 and medium effort. If rate-limited, do not retry during the stated cooldown; record the pending gate and do not call the paper finished. A local review is supplementary and cannot satisfy this gate.
+  Not obtained because the user explicitly instructed this turn to ignore Claude. The waiver permits the urgent arXiv handoff but does not satisfy this paper-completion gate.
 
 - [ ] **Step 5: Commit review files and fixes.**
 
@@ -300,13 +303,13 @@ Pending before the paper can be declared finished:
 
   Confirm page numbers on every page including appendices, figure/table placement, references, author-block policy, line-number policy, and absence of accidental private paths, credentials, or large assets. Keep the source ZIP limited to reproducible source, bibliography, figures, tables, and required lightweight assets.
 
-- [ ] **Step 3: Run the public-release hygiene audit.**
+- [x] **Step 3: Run the public-release hygiene audit.**
 
-  Ensure the venue bundle excludes private run metadata, cluster paths, human-study data, and incomplete model outputs. Keep the private repository as the complete project log and sensitive-data boundary.
+  `python3 scripts/audit_release.py release/arxiv --kind arxiv` passed. The source archive contains only the manuscript, lightweight style files, table source, and the two final vector figures; private run metadata, cluster paths, human-study data, and incomplete model outputs are excluded.
 
-- [ ] **Step 4: Record resource and token accounting.**
+- [x] **Step 4: Record resource and token accounting.**
 
-  Record total GPU-hours from Slurm accounting when applicable, including job IDs, GPU count, elapsed time, partition, and any accounting gap. Record available Codex token usage and source/time limitations in the project completion record.
+  This arXiv handoff used no cluster jobs and therefore incurred 0 GPU-hours. Codex goal usage at the handoff was approximately 3.5M tokens; the UI counter is cumulative across continuations and is not a per-command measurement.
 
 - [ ] **Step 5: Mark completion only after all gates pass.**
 

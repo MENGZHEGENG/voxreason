@@ -1,0 +1,103 @@
+{
+  "canvas_mm": [180, 108],
+  "font_pt": 8.5,
+  "min_font_pt": 7.5,
+  "padding_mm": 2.0,
+  "edge_clearance_mm": 1.0,
+  "nodes": [
+    {
+      "id": "case_record",
+      "label": "Case record\nturn · role · scene\nsource-labeled cue"
+    },
+    {
+      "id": "typed_planner",
+      "label": "Typed planner\ndelivery slots +\ncitations\naffect · intent ·\nprosody"
+    },
+    {
+      "id": "verifier",
+      "label": "Verifier\ncitation\nvalidity\nplan-slot\nagreement"
+    },
+    {
+      "id": "one_cue_edit",
+      "label": "One-cue edit\ncue locality\nall other slots fixed"
+    },
+    {
+      "id": "listener_checks",
+      "label": "Listener-\nindependent\nchecks\ncue coverage\ncitation requirement"
+    },
+    {
+      "id": "waveform_path",
+      "label": "Waveform path\ndownstream only\nexcluded from current\nclaims"
+    },
+    {
+      "id": "evidence_validity",
+      "label": "Evidence record\nvalidity · agreement"
+    },
+    {
+      "id": "evidence_locality",
+      "label": "Evidence record\nlocality"
+    },
+    {
+      "id": "evidence_coverage",
+      "label": "Evidence record\ncue coverage ·\ncitation requirement"
+    }
+  ],
+  "edges": [
+    {
+      "id": "case_to_planner",
+      "source": "case_record",
+      "target": "typed_planner",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "planner_to_verifier",
+      "source": "typed_planner",
+      "target": "verifier",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "verifier_to_edit",
+      "source": "verifier",
+      "target": "one_cue_edit",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "edit_to_checks",
+      "source": "one_cue_edit",
+      "target": "listener_checks",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "planner_to_waveform",
+      "source": "typed_planner",
+      "target": "waveform_path",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "verifier_to_evidence_validity",
+      "source": "verifier",
+      "target": "evidence_validity",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "edit_to_evidence_locality",
+      "source": "one_cue_edit",
+      "target": "evidence_locality",
+      "kind": "flow",
+      "label": ""
+    },
+    {
+      "id": "checks_to_evidence_coverage",
+      "source": "listener_checks",
+      "target": "evidence_coverage",
+      "kind": "flow",
+      "label": ""
+    }
+  ]
+}
