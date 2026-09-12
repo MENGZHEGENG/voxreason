@@ -12,6 +12,7 @@ Date: 2026-09-12
 ## Verification
 
 - Author-facing source retains the author block and `\iclrfinalcopy`; no line-number switch is enabled.
+- The author block is preserved in the staged and Desktop arXiv source/PDF handoff; the anonymous ICLR bundle is a separate venue variant and does not replace this author-facing artifact.
 - Bundled Tectonic compilation from the isolated release source succeeded with 10 pages.
 - Fresh unpack-and-compile of `source.zip` succeeded with 10 pages.
 - `python3 scripts/audit_release.py release/arxiv --kind arxiv` passed.

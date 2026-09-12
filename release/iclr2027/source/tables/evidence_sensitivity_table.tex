@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{Evidence-sensitivity matrix on the source-key-disjoint holdout. Each row contains 24 held-out pairs for each of three deterministic seeds (72 records total). The table reports the core claim-gate metrics; the complete locality summary, including preservation and unexpected-change rates, is in the released JSON summary. The source-label oracle is a construction-level reference; the other rows are deterministic controls or a prior-only calibration diagnostic, not learned-model results.}
+\label{tab:evidence-sensitivity}
+\scriptsize
+\setlength{\tabcolsep}{1.8pt}
+\resizebox{0.99\linewidth}{!}{%
+\begin{tabular}{@{}p{0.27\linewidth}*{7}{>{\centering\arraybackslash}c}@{}}
+\toprule
+\textbf{Condition} & \textbf{N} & \shortstack{\textbf{Orig. plan}\\$\uparrow$} & \shortstack{\textbf{CF plan}\\$\uparrow$} & \shortstack{\textbf{Decisive}\\$\uparrow$} & \shortstack{\textbf{CF cons.}\\$\uparrow$} & \shortstack{\textbf{Req. change}\\$\uparrow$} & \shortstack{$G_{\mathrm{cite}}$\\$^{\mathrm{cf}}$\\$\uparrow$}\\
+\midrule
+Source-label oracle & 72 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000\\
+\rowcolor{accent}
+Text evidence + declared delta & 72 & 0.583 & 0.792 & 0.000 & 1.000 & 1.000 & 0.000\\
+Shuffled delta$^\dagger$ & 72 & 0.583 & 0.792 & 0.000 & 1.000 & 1.000 & 0.000\\
+Text evidence only & 72 & 0.583 & 0.417 & 0.000 & 0.000 & 0.000 & 0.505\\
+Citation echo control & 72 & 0.583 & 0.417 & 0.000 & 0.000 & 0.000 & 0.117\\
+Prior only & 72 & 0.958 & 0.417 & 0.000 & 0.000 & 0.000 & 0.000\\
+\bottomrule
+\end{tabular}%
+}
+\vspace{-2pt}
+\begin{flushleft}
+\footnotesize $^\dagger$The fixture assigns identical deltas to all pairs, so the seeded permutation is diagnostic and degenerate. ``Plan$_\mathrm{orig}$'' and ``Plan$_\mathrm{cf}$'' denote original and counterfactual plan-slot accuracy; ``CF cons.'' denotes counterfactual consistency; ``Req. change'' denotes required-change accuracy.\end{flushleft}
+\end{table}

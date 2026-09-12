@@ -30,4 +30,12 @@ Scope: `paper/voxreason_full_polished.tex`, the polished pre-synthesis schematic
 - Inspected rendered pages 1, 6, and 10 from the staged PDF. The author block, results table, evidence-sensitivity table, references, and visible page numbers are readable; no clipping or overlap was found.
 - Verified the staged PDF is letter-sized, unencrypted, 10 pages, and has visible page numbers including the final references page. The Desktop copies match the staged PDF and source ZIP by SHA-256.
 
-Status: PASS for the urgent author-facing arXiv handoff. The anonymous ICLR bundle and the required external Claude review remain separate pending gates for broader paper completion; the user explicitly waived Claude for this handoff.
+## Anonymous ICLR release QA — 2026-09-12
+
+- Compiled `release/iclr2027/source/voxreason_iclr2027.tex` with the bundled Tectonic runtime into an external temporary directory; exit code 0 and 10 pages.
+- Independently unpacked `release/iclr2027/source.zip` into a fresh temporary directory and compiled the unpacked source; exit code 0 and 10 pages.
+- Ran `python3 scripts/audit_release.py release/iclr2027 --kind iclr2027`; result: PASS. The audit confirmed the anonymous identity policy, safe archive members, and absence of private/build/local/cluster paths.
+- Inspected rendered pages 1, 3, 4, 6, 7, and 10 from the staged PDF. The anonymous first page, schematic, tables, results figure, references, and visible page numbers are readable; no clipping or overlap was found.
+- Verified the staged PDF is letter-sized, unencrypted, 10 pages, with line numbers and no author identity or final-copy switch.
+
+Status: PASS for both staged release bundles. The arXiv bundle is author-facing and retains author information; the ICLR bundle is anonymous. The required external Claude review remains a separate pending gate for broader paper completion; the user explicitly waived Claude for this handoff.

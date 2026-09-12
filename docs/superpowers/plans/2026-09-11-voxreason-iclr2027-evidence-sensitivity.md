@@ -10,7 +10,7 @@
 
 **Spec:** This document is the execution specification for the GPT-6 evidence-grounded paper plan; the current benchmark and manuscript remain the source of truth for exact schemas and already-verified numbers.
 
-## Execution status — 2026-09-12 18:10 EDT
+## Execution status — 2026-09-12 18:35 EDT
 
 Completed in the current working tree:
 
@@ -23,11 +23,12 @@ Completed in the current working tree:
 - The final local review records the known four public-release-hygiene test failures; they arise from intentionally tracked manuscript/figure outputs and are not code or benchmark failures.
 - An author-facing arXiv bundle was compiled independently from an isolated source tree with bundled Tectonic, round-trip compiled from `source.zip`, and passed `scripts/audit_release.py`.
 - The verified arXiv PDF and source ZIP were copied to `/Users/gengm/Desktop/voxreason_arxiv_2026-09-12/` with matching SHA-256 checksums.
+- The anonymous ICLR 2027 bundle was then compiled from an isolated source tree, independently round-trip compiled from `source.zip`, passed `scripts/audit_release.py --kind iclr2027`, and visually checked on pages 1, 3, 4, 6, 7, and 10 with visible page numbers.
 
 Pending before the broader paper can be declared finished:
 
 - The user explicitly instructed this turn to ignore Claude, so no substantive Claude review was obtained. This is an explicit waiver for the urgent arXiv handoff, not completion of the required external review gate.
-- The anonymous ICLR venue bundle remains deferred; the author-facing arXiv bundle is complete and audited.
+- The anonymous ICLR venue bundle is now complete as a staged, audited handoff; it is separate from the author-facing arXiv bundle, which retains the author block and `\iclrfinalcopy`.
 - Incomplete learned-run summaries remain appendix diagnostics only; no learned-model ranking or training claim is promoted.
 - A read-only staged-release audit utility and tests were added in commit `9474d02`; it checks source identity rules, private/legacy paths, archive traversal, and basic PDF/source closure. It is not a substitute for auditing the final bundles.
 
@@ -202,7 +203,7 @@ Pending before the broader paper can be declared finished:
 
 - [x] **Step 4: Build the author-facing arXiv variant.**
 
-  Built and audited `release/arxiv/` with the author block and `\iclrfinalcopy` preserved. The anonymous ICLR source remains a separate deferred deliverable.
+  Built and audited `release/arxiv/` with the author block and `\iclrfinalcopy` preserved. The staged and Desktop copies retain the same author-facing source and checksums.
 
 - [x] **Step 5: Commit the analysis and manuscript revision.**
 
@@ -305,7 +306,7 @@ Pending before the broader paper can be declared finished:
 
 - [x] **Step 3: Run the public-release hygiene audit.**
 
-  `python3 scripts/audit_release.py release/arxiv --kind arxiv` passed. The source archive contains only the manuscript, lightweight style files, table source, and the two final vector figures; private run metadata, cluster paths, human-study data, and incomplete model outputs are excluded.
+  `python3 scripts/audit_release.py release/arxiv --kind arxiv` and `python3 scripts/audit_release.py release/iclr2027 --kind iclr2027` passed. Both source archives contain only the manuscript, lightweight style files, table source, and the two final vector figures; private run metadata, cluster paths, human-study data, and incomplete model outputs are excluded.
 
 - [x] **Step 4: Record resource and token accounting.**
 
