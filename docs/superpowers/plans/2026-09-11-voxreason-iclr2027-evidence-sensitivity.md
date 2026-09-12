@@ -10,7 +10,7 @@
 
 **Spec:** This document is the execution specification for the GPT-6 evidence-grounded paper plan; the current benchmark and manuscript remain the source of truth for exact schemas and already-verified numbers.
 
-## Execution status — 2026-09-12 00:27 EDT
+## Execution status — 2026-09-12 00:46 EDT
 
 Completed in the current working tree:
 
@@ -18,6 +18,7 @@ Completed in the current working tree:
 - The evidence-sensitivity matrix completed six controlled conditions over three deterministic seeds and 24 source-key-disjoint pairs, yielding 432 expected, observed, and valid records with zero missing or duplicate rows.
 - The claim-safe analysis, manuscript revision, evidence-sensitivity table, polished pre-synthesis schematic, rendered PDF checks, and three-skill local review cycle were completed.
 - The compact evidence-sensitivity results figure was generated from the audited summary, exported as PDF and PNG, included in the manuscript, and inspected both standalone and in the rendered ten-page PDF.
+- The final manuscript source, claim analysis, results table and figure, QA record, local review records, and lightweight LaTeX dependencies were committed and pushed in `d942f38`.
 - The final local review records the known four public-release-hygiene test failures; they arise from intentionally tracked manuscript/figure outputs and are not code or benchmark failures.
 
 Pending before the paper can be declared finished:
@@ -200,7 +201,7 @@ Pending before the paper can be declared finished:
 
   Maintain anonymous ICLR source separately from author-facing arXiv source. Remove only line numbers in arXiv; preserve author information and content. Include the required AI-use and reproducibility statements where the template permits.
 
-- [ ] **Step 5: Commit the analysis and manuscript revision.**
+- [x] **Step 5: Commit the analysis and manuscript revision.**
 
   ```bash
   git add paper/analysis/evidence_sensitivity_analysis.md paper/voxreason_full_polished.tex paper/tables/evidence_sensitivity_table.tex paper/references.bib
@@ -231,7 +232,7 @@ Pending before the paper can be declared finished:
 
   Compile the paper, render the relevant PDF pages, and inspect both the page render and the standalone PDF/SVG. Check labels, legends, captions, arrows, clipping, font size, alignment, and single-page placement. Record findings in `paper/qa/figure_table_qa.md` and revise until no major overlap or readability issue remains.
 
-- [ ] **Step 4: Commit visual outputs that belong in the reproducibility release.**
+- [x] **Step 4: Commit visual outputs that belong in the reproducibility release.**
 
   ```bash
   git add paper/figures paper/tables paper/qa/figure_table_qa.md
